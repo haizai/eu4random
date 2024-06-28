@@ -25,6 +25,7 @@ interface CountryTodo {
   id: string,
   capital: number,
   provinces: number[]
+  weight: number
 }
 
 async function Todo() {
@@ -60,7 +61,8 @@ async function nearestProvince() {
     cd[id] = {
       id,
       capital,
-      provinces: [capital]
+      provinces: [capital],
+      weight: Math.random()*99+1
     }
   });
   existProvinceSet.forEach(province => {
@@ -69,7 +71,7 @@ async function nearestProvince() {
     var max = 0
     var maxCountry
     for(var country in cd) {
-      let weight = 1;
+      let weight = cd[country].weight;
       weight *= 10000 / (Managers.Weight.calProvinceFactor(ProvinceWeightType.DistanceSquareToCapical, parseInt(province), country) ** 0.5)
       weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Culture, parseInt(province), country)
       weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Religion, parseInt(province), country)
