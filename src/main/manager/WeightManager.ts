@@ -17,6 +17,7 @@ export default class WeightManager {
         let capital = Managers.File.HistoryCountries.CountryDir[country].capital
         let capitalPosInt = Managers.Map.getProvinceCityPosInt(capital.toString())
         return Managers.Map.calDistanceSquare(provincePosInt, capitalPosInt)
+        break
       }
       case ProvinceWeightType.Culture: {
         let provinceCulture = Managers.File.HistoryProvinces.ProvinceDir[province].NowParam.culture
@@ -24,6 +25,7 @@ export default class WeightManager {
         if (provinceCulture === countryCulture) {
           return 2
         }
+        break
       }
       case ProvinceWeightType.Religion: {
         let provinceReligion = Managers.File.HistoryProvinces.ProvinceDir[province].NowParam.religion
@@ -31,6 +33,7 @@ export default class WeightManager {
         if (provinceReligion === countryReligion) {
           return 2
         }
+        break
       }
     }
     return 1

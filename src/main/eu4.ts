@@ -70,7 +70,7 @@ async function nearestProvince() {
     var minCountry
     for(var country in cd) {
       let weight = 1;
-      weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.DistanceSquareToCapical, parseInt(province), country) ** 0.5
+      weight *= 10000 / (Managers.Weight.calProvinceFactor(ProvinceWeightType.DistanceSquareToCapical, parseInt(province), country) ** 0.5)
       weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Culture, parseInt(province), country)
       weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Religion, parseInt(province), country)
       
