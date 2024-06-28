@@ -3,7 +3,7 @@ import fs from "node:fs/promises"
 import Global from "../Global";
 import Util from "../../Util";
 import BMP from "../bmp";
-import Managers from "./Manager";
+import Managers from "./Managers";
 
 interface ProvinceData {
   [id:string]: ProvinceItem

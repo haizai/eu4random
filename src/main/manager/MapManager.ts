@@ -3,7 +3,7 @@ import path from "node:path"
 import fs from "node:fs/promises"
 import BMP from "../bmp"
 import Util from "../../Util"
-import Managers from "./Manager"
+import Managers from "./Managers"
 
 class MapManager {
   width:number
@@ -50,10 +50,10 @@ class MapManager {
     var posInt = Managers.Map.ToPosInt(parseInt(positions[0]), parseInt(positions[1]))
     return posInt
   }
-  calDistance(posInt1:number, posInt2:number) {
+  calDistanceSquare(posInt1:number, posInt2:number) {
     var [x1, y1] = this.ToPos(posInt1);
     var [x2, y2] = this.ToPos(posInt2);
-    return ((x1-x2)**2 + (y1-y2)**2)**0.5
+    return (x1-x2)**2 + (y1-y2)**2
   }
 
 

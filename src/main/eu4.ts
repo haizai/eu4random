@@ -1,11 +1,12 @@
 import Util from "../Util";
 import Global from "./Global";
 import { Syntax } from "./Syntax/Syntax";
-import Managers from "./manager/Manager";
+import Managers from "./manager/Managers";
 import os from "node:os"
 import process from "node:process"
 import path from "node:path"
 import ModDescriptionSyntax from "./Syntax/file/ModDescriptionSyntax";
+import { ProvinceWeightType } from "./manager/WeightManager";
 
 console.log("eu4")
 
@@ -23,16 +24,17 @@ async function initData() {
 interface CountryTodo {
   id: string,
   capital: number,
-  posInt: number,
   provinces: number[]
 }
 
 async function Todo() {
+  await initData();
+  
   var mod = new ModDescriptionSyntax()
   mod.initData()
-  await mod.writeFile(path.join(Global.eu4DocumentsPath, "mode"))
+  await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))
   await mod.writeFile(Global.eu4DocumentsModProjectPath)
-  await initData();
+
   await nearestProvince()
 }
 
@@ -55,23 +57,26 @@ async function nearestProvince() {
   existCountrySet.forEach(id => {
     let capital = Managers.File.HistoryCountries.CountryDir[id].capital
     existProvinceSet.delete(capital.toString())
-    var posInt = Managers.Map.getProvinceCityPosInt(capital.toString())
     cd[id] = {
       id,
       capital,
-      posInt,
       provinces: [capital]
     }
   });
   existProvinceSet.forEach(province => {
-    var posInt = Managers.Map.getProvinceCityPosInt(province)
-    var min = 1000000000000
+    // Managers.Weight.calProvinceWeight()
+    // var posInt = Managers.Map.getProvinceCityPosInt(province)
+    var min = Number.MAX_VALUE
     var minCountry
-    for(var key in cd) {
-      var distance = Managers.Map.calDistance(cd[key].posInt, posInt)
-      if (distance < min) {
-        min = distance
-        minCountry = cd[key].id
+    for(var country in cd) {
+      let weight = 1;
+      weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.DistanceSquareToCapical, parseInt(province), country) ** 0.5
+      weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Culture, parseInt(province), country)
+      weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Religion, parseInt(province), country)
+      
+      if (weight < min) {
+        min = weight
+        minCountry = cd[country].id
       }
     }
     if (minCountry != null) {

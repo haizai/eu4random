@@ -1,4 +1,5 @@
-import CommonCountryTagsSyntax from "../Syntax/file/common/CommonCountryTagsSyntax"
+import CommonCountrytagsSyntax from "../Syntax/file/common/CommonCountrytagsSyntax"
+import CommonCulturesSyntax from "../Syntax/file/common/CommonCulturesSyntax"
 import HistoryCountriesSyntax from "../Syntax/file/history/HistoryCountriesSyntax"
 import HistoryProvincesSyntax from "../Syntax/file/history/HistoryProvincesSyntax"
 import MapAmbientObjectSyntax from "../Syntax/file/map/MapAmbientObjectSyntax"
@@ -27,7 +28,8 @@ class FileManager {
   HistoryProvinces: HistoryProvincesSyntax = new HistoryProvincesSyntax()
   HistoryCountries: HistoryCountriesSyntax = new HistoryCountriesSyntax()
   
-  CommonCountryTags: CommonCountryTagsSyntax = new CommonCountryTagsSyntax()
+  CommonCountrytags: CommonCountrytagsSyntax = new CommonCountrytagsSyntax()
+  CommonCultures: CommonCulturesSyntax = new CommonCulturesSyntax()
   
   async parseAllFile() {
     await this.MapAmbientObject.parseFile()
@@ -44,7 +46,8 @@ class FileManager {
     await this.HistoryProvinces.parseFile()
     await this.HistoryCountries.parseFile()
     
-    await this.CommonCountryTags.parseFile()
+    await this.CommonCountrytags.parseFile()
+    await this.CommonCultures.parseFile()
 
 
 

@@ -10,8 +10,10 @@ type SyntaxValue = SyntaxItem[] | SyntaxItem | null
 // 简略语法分析, #注释, {}范围
 class Syntax {
   private static commentReg = /^\s*#.*/
-  private static keyEqualSpaceReg =/^\s*([a-zA-z_0-9\.:]+)\s*=\s*/
-  private static simpleValueSpaceReg =/^\s*([a-zA-z_0-9\.\-:]+|(\".*?\"))\s*/ // ""非贪婪匹配
+
+  // Windows-1252 简单的认为ASCII之外的均为可用字符, :在属性中存在, '只在名字中存在
+  private static keyEqualSpaceReg =   /^\s*([a-zA-z_0-9\x80-\xff\.:\']+)\s*=\s*/
+  private static simpleValueSpaceReg =/^\s*([a-zA-z_0-9\x80-\xff\.:\'\-]+|(\".*?\"))\s*/ // ""非贪婪匹配
   private static leftCurlyReg =/^\s*{\s*/
   private static rightCurlyReg =/^\s*}\s*/
   private static spaceEndReg =/^\s*$/
@@ -93,6 +95,7 @@ class Syntax {
   private parseRoot(){
     this.parseComment()
     while(true) {
+      let lastOffset = this.offset
       let skv = this.parseItem()
       this.parseComment()
       if (skv !== null) {
@@ -100,6 +103,9 @@ class Syntax {
       }       
       if (this.isEnd()) {
         break
+      }
+      if (lastOffset == this.offset) {
+        throw new Error(`未解析的字符: ${this.str[this.offset]} ${this.str[this.offset].charCodeAt(0)}`)
       }
     }
   }
@@ -109,13 +115,17 @@ class Syntax {
       this.offset += m[0].length
       var ret:SyntaxValue = []
       while(true) {
+        let lastOffset = this.offset
         let skv = this.parseItem()
         this.parseComment()
         if (skv !== null) {
           ret.push(skv)
-        }       
+        }
         if (this.IsParseRightCurly()) {
           break
+        }
+        if (lastOffset == this.offset) {
+          throw new Error(`parse char Error: ${this.str[this.offset]} ${this.str[this.offset].charCodeAt(0)}`)
         }
         // if (skv === null || typeof(skv) == "string") {
         //   break
