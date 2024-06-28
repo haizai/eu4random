@@ -111,11 +111,6 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@^14.14.3":
-  version "14.18.63"
-  resolved "https://r.cnpmjs.org/@types/node/-/node-14.18.63.tgz#1788fa8da838dbb5f9ea994b834278205db6ca2b"
-  integrity sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==
-
 "@types/responselike@^1.0.0":
   version "1.0.3"
   resolved "https://r.cnpmjs.org/@types/responselike/-/responselike-1.0.3.tgz#cc29706f0a397cfe6df89debfe4bf5cea159db50"
@@ -200,11 +195,6 @@ bl@^4.1.0:
     buffer "^5.5.0"
     inherits "^2.0.4"
     readable-stream "^3.4.0"
-
-bmp-js@^0.1.0:
-  version "0.1.0"
-  resolved "https://r2.cnpmjs.org/bmp-js/-/bmp-js-0.1.0.tgz#e05a63f796a6c1ff25f4771ec7adadc148c07233"
-  integrity sha512-vHdS19CnY3hwiNdkaqk93DvjVLfbEcI8mys4UjuWrlX1haDmroo8o4xCzh4wD6DGV6HxRCyauwhHRqMTfERtjw==
 
 boolean@^3.0.1:
   version "3.2.0"
@@ -563,13 +553,6 @@ gauge@^4.0.3:
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
     wide-align "^1.1.5"
-
-gd-bmp@^2.0.1:
-  version "2.0.1"
-  resolved "https://r2.cnpmjs.org/gd-bmp/-/gd-bmp-2.0.1.tgz#06db5bc01a02877442447535952175137f035f82"
-  integrity sha512-980ykVIc2M0q1FrRUVw/bAacEOivCkKGqnlne3yLyyIEy3TyC9XtUixQd71nrC2UF+Bnt3dKZus/Ud+PaKQXfQ==
-  dependencies:
-    "@types/node" "^14.14.3"
 
 get-caller-file@^2.0.5:
   version "2.0.5"
