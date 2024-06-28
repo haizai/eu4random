@@ -14,7 +14,14 @@ export default class Global {
     try {
       await fs.access(configPath)
       const config = await fs.readFile(configPath, {encoding:"utf8"});
-      Global.eu4GamePath = JSON.parse(config).eu4GamePath
+      const json = JSON.parse(config)
+      if (json.eu4GamePath) {
+        Global.eu4GamePath = json.eu4GamePath
+      }
+      if (json.eu4DocumentsPath) {
+        Global.eu4DocumentsPath = json.eu4DocumentsPath
+        Global.eu4DocumentsModProjectPath = path.join(Global.eu4DocumentsPath, "mod", Global.projectName)
+      }
     } catch {
       
     } 
