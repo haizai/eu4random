@@ -53,7 +53,9 @@ class MapManager {
   calDistanceSquare(posInt1:number, posInt2:number) {
     var [x1, y1] = this.ToPos(posInt1);
     var [x2, y2] = this.ToPos(posInt2);
-    return (x1-x2)**2 + (y1-y2)**2
+    var x = Math.abs(x2 - x1)
+    x = Math.min(x, this.width - x)
+    return x**2 + (y1-y2)**2
   }
 
 

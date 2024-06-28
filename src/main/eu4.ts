@@ -66,21 +66,21 @@ async function nearestProvince() {
   existProvinceSet.forEach(province => {
     // Managers.Weight.calProvinceWeight()
     // var posInt = Managers.Map.getProvinceCityPosInt(province)
-    var min = Number.MAX_VALUE
-    var minCountry
+    var max = 0
+    var maxCountry
     for(var country in cd) {
       let weight = 1;
       weight *= 10000 / (Managers.Weight.calProvinceFactor(ProvinceWeightType.DistanceSquareToCapical, parseInt(province), country) ** 0.5)
       weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Culture, parseInt(province), country)
       weight *= Managers.Weight.calProvinceFactor(ProvinceWeightType.Religion, parseInt(province), country)
       
-      if (weight < min) {
-        min = weight
-        minCountry = cd[country].id
+      if (weight > max) {
+        max = weight
+        maxCountry = cd[country].id
       }
     }
-    if (minCountry != null) {
-      cd[minCountry].provinces.push(parseInt(province))
+    if (maxCountry != null) {
+      cd[maxCountry].provinces.push(parseInt(province))
     }
   });
   for(let key in cd) {
