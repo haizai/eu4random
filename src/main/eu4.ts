@@ -48,15 +48,15 @@ async function nearestProvince() {
   let existCountrySet = new Set<string>()
   let existProvinceSet = new Set<string>()
 
-  for(let provinceId in Managers.File.HistoryProvinces.ProvinceDir) {
-    let data = Managers.File.HistoryProvinces.ProvinceDir[provinceId]
+  for(let provinceId in Managers.File.HistoryProvinces.Dir) {
+    let data = Managers.File.HistoryProvinces.Dir[provinceId]
     if (data && data.NowParam.owner) {
       existCountrySet.add(data.NowParam.owner)
       existProvinceSet.add(provinceId)
     }
   }
   existCountrySet.forEach(id => {
-    let capital = Managers.File.HistoryCountries.CountryDir[id].capital
+    let capital = Managers.File.HistoryCountries.Dir[id].NowParam.capital
     existProvinceSet.delete(capital.toString())
     cd[id] = {
       id,
