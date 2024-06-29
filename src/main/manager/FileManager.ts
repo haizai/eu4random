@@ -43,10 +43,10 @@ class FileManager {
     // await this.MapSuperregion.parseFile()
     // await this.MapTerrain.parseFile()
 
-    await this.HistoryProvinces.parseFile()
-    await this.HistoryCountries.parseFile()
+    // await this.HistoryProvinces.parseFile()
+    // await this.HistoryCountries.parseFile()
     
-    // await this.CommonCountrytags.parseFile()
+    await this.CommonCountrytags.parseFile()
     // await this.CommonCultures.parseFile()
 
 

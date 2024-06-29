@@ -16,8 +16,23 @@ export enum SyntaxParamType {
   floatArray,
 }
 
+// 特殊标识符, 解析时按一定规则处理
+export enum SyntaxIdentifier {
+  None,
+  CountryTag,
+  ProvinceId,
+  Time,
+}
+
+
 export abstract class SyntaxParam {
-  abstract TYPES : {[key: string]: SyntaxParamType}
+  IdentifierType: {
+    CountryTag?: SyntaxParamType
+    ProvinceId?: SyntaxParamType
+  }
+  TYPES : {
+    [key: string]: SyntaxParamType
+  } = {}
   abstract CreateInstance(): any
   Copy<T extends SyntaxParam>(): T {
     var ret:any = this.CreateInstance()
@@ -123,4 +138,3 @@ export abstract class SyntaxParam {
     }
   }
 }
-  

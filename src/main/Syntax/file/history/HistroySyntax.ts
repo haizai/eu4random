@@ -13,7 +13,6 @@ export interface HistoryTimeline<T extends SyntaxParam> {
   Time: string
   Param: T
 }
-
 export interface HistoryDir<T extends SyntaxParam> {
   [id: string]: HistoryObj<T>
 }

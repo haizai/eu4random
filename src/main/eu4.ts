@@ -31,10 +31,10 @@ interface CountryTodo {
 async function Todo() {
   await initData();
   
-  var mod = new ModDescriptionSyntax()
-  mod.initData()
-  await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))
-  await mod.writeFile(Global.eu4DocumentsModProjectPath)
+  // var mod = new ModDescriptionSyntax()
+  // mod.initData()
+  // await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))
+  // await mod.writeFile(Global.eu4DocumentsModProjectPath)
 
   // await nearestProvince()
 }
