@@ -14,12 +14,11 @@ async function initData() {
 
   await Global.init();
   await Managers.File.parseAllFile()
-  await Managers.Map.ReadProvinces();
-  Managers.Province.initData()
-  await Managers.Province.ReadDefinition()
-  Managers.Province.fillColorIntDir();
-  await Managers.Map.fillAllPos()
-  // Managers.Province.fillAdjacentProvince()
+  // await Managers.Map.ReadProvinces();
+  // Managers.Province.initData()
+  // await Managers.Province.ReadDefinition()
+  // Managers.Province.fillColorIntDir();
+  // await Managers.Map.fillAllPos()
 }
 
 interface CountryTodo {
@@ -37,7 +36,7 @@ async function Todo() {
   await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))
   await mod.writeFile(Global.eu4DocumentsModProjectPath)
 
-  await nearestProvince()
+  // await nearestProvince()
 }
 
 // 首都不变, 其他有人的省份给最近的国家
