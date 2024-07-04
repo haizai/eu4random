@@ -1,4 +1,4 @@
-import { SyntaxParam, SyntaxParamType } from "../../SyntaxParam"
+import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
 import { HistroySyntax} from "./HistroySyntax"
 
 class HistoryProvinceParam extends SyntaxParam {
@@ -17,19 +17,19 @@ class HistoryProvinceParam extends SyntaxParam {
   is_city?: boolean //
   discovered_by?: string[] // 被国家组发现 
   TYPES = { 
-    owner: SyntaxParamType.string,
-    controller: SyntaxParamType.string,
-    add_core: SyntaxParamType.stringArray,
-    culture: SyntaxParamType.string,
-    religion: SyntaxParamType.string,
-    hre: SyntaxParamType.boolean,
-    base_tax: SyntaxParamType.int,
-    base_production: SyntaxParamType.int,
-    base_manpower: SyntaxParamType.int,
-    trade_goods: SyntaxParamType.string,
-    capital: SyntaxParamType.string,
-    is_city: SyntaxParamType.boolean,
-    discovered_by: SyntaxParamType.stringArray,
+    owner: SyntaxParamSimpleType.string,
+    controller: SyntaxParamSimpleType.string,
+    add_core: [SyntaxParamSimpleType.string],
+    culture: SyntaxParamSimpleType.string,
+    religion: SyntaxParamSimpleType.string,
+    hre: SyntaxParamSimpleType.boolean,
+    base_tax: SyntaxParamSimpleType.int,
+    base_production: SyntaxParamSimpleType.int,
+    base_manpower: SyntaxParamSimpleType.int,
+    trade_goods: SyntaxParamSimpleType.string,
+    capital: SyntaxParamSimpleType.string,
+    is_city: SyntaxParamSimpleType.boolean,
+    discovered_by: [SyntaxParamSimpleType.string],
   }
 
   CreateInstance = () => new HistoryProvinceParam()

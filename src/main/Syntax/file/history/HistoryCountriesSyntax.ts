@@ -1,4 +1,4 @@
-import { SyntaxParam, SyntaxParamType } from "../../SyntaxParam"
+import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
 import { HistroySyntax} from "./HistroySyntax"
 
 class HistoryCountryParam extends SyntaxParam {
@@ -11,12 +11,12 @@ class HistoryCountryParam extends SyntaxParam {
   technology_group?: string //科技组
 
   TYPES = { 
-    government: SyntaxParamType.string,
-    add_government_reform: SyntaxParamType.string,
-    primary_culture: SyntaxParamType.string,
-    religion: SyntaxParamType.string,
-    capital: SyntaxParamType.number, //首都
-    technology_group: SyntaxParamType.string,
+    government: SyntaxParamSimpleType.string,
+    add_government_reform: SyntaxParamSimpleType.string,
+    primary_culture: SyntaxParamSimpleType.string,
+    religion: SyntaxParamSimpleType.string,
+    capital: SyntaxParamSimpleType.number, //首都
+    technology_group: SyntaxParamSimpleType.string,
   }
   CreateInstance = () => new HistoryCountryParam()
 

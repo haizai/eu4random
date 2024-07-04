@@ -87,9 +87,6 @@ class ProvinceManager {
   }
   fillAdjacentProvince() {
     for (const id in this.data) {
-      if (id != "1816") {
-        continue
-      }
       let provinceData = this.data[id]
       provinceData.allPos.forEach(posInt=>{
         Managers.Map.getAdjacentPosInt(posInt).forEach(adjacentPosInt=>{
