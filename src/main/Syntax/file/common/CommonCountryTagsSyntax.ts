@@ -1,7 +1,14 @@
-import { FileParamSyntax, SyntaxCountryParam } from "../../FileParamSyntax"
+import { FileParamSyntax } from "../../FileParamSyntax"
+import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
 
-
-export default class CommonCountrytagsSyntax extends FileParamSyntax<SyntaxCountryParam> {
-  param: SyntaxCountryParam = new SyntaxCountryParam()
+class CommonCountrytagsParam extends SyntaxParam {
+  CreateInstance = () => new CommonCountrytagsParam()
+  ANY: {[key: string]: string}
+  TYPES = {
+    ANY: SyntaxParamSimpleType.string
+  }
+}
+export default class CommonCountrytagsSyntax extends FileParamSyntax<CommonCountrytagsParam> {
+  param: CommonCountrytagsParam = new CommonCountrytagsParam()
   relativePath = ["common","country_tags", "00_countries.txt"]
 }

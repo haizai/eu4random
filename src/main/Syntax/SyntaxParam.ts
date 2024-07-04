@@ -41,9 +41,12 @@ export abstract class SyntaxParam {
   Copy<T extends SyntaxParam>(): T {
     var ret = this.CreateInstance()
     var anyThis = this as any
-    ret.TYPES = JSON.parse(JSON.stringify(this.TYPES))
-    for(var key in this.TYPES) {
-      ret[key] = JSON.parse(JSON.stringify(anyThis[key]))
+    if (this.TYPES) {
+      for(var key in this.TYPES) {
+        if (anyThis[key] !== undefined) {
+          ret[key] = JSON.parse(JSON.stringify(anyThis[key]))
+        }
+      }
     }
     return ret
   }
@@ -51,68 +54,30 @@ export abstract class SyntaxParam {
     var anyThis = this as any
     var anyParam = param as any
     for (let key in this.TYPES) {
-      anyThis[key] = JSON.parse(JSON.stringify(anyParam[key]))
+      if (anyParam[key] !== undefined) {
+        anyThis[key] = JSON.parse(JSON.stringify(anyParam[key]))
+      }
     }
   }
   SetSyntaxData(data:SyntaxItem[]) {
-    for(let key in this.TYPES) {
-      // if (this.key)
-    }
-    if (this.TYPES.Any !== undefined) {
+    // for(let key in this.TYPES) {
+    //   // if (this.key)
+    // }
+    // if (this.TYPES.Any !== undefined) {
 
-    }
-
+    // }
     var anyThis = this as any
     for (var item of data) {
-      if (item instanceof Object) {
-        let key = item.key
-        let val = item.value as string
-        let type = this.TYPES[key]
-        if(type === undefined) {
-          continue
-        }
-        switch (type) {
-          case SyntaxParamSimpleType.string:
-            anyThis[key] = val
-            break
-          case SyntaxParamSimpleType.boolean:
-            if (val.toLowerCase() === "yes") {
-              anyThis[key] = true
-            } else if (val.toLowerCase() === "no") {
-              anyThis[key] = false
-            }
-            break
-          case SyntaxParamSimpleType.number:
-          case SyntaxParamSimpleType.float:
-            anyThis[key] = parseFloat(val)
-            break
-          case SyntaxParamSimpleType.int:
-            anyThis[key] = parseInt(val, 10)
-            break
-          // case SyntaxParamSimpleType.stringArray:
-          //   if (!anyThis[key]) { anyThis[key] = [] }
-          //   anyThis[key].push(val)
-          //   break
-          // case SyntaxParamSimpleType.booleanArray:
-          //   if (!anyThis[key]) { anyThis[key] = [] }            
-          //   if (val.toLowerCase() === "yes") {
-          //     anyThis[key].push(true)
-          //   } else if (val.toLowerCase() === "no") {
-          //     anyThis[key].push(false)
-          //   }
-          //   break
-          // case SyntaxParamSimpleType.numberArray:
-          // case SyntaxParamSimpleType.floatArray:
-          //   if (!anyThis[key]) { anyThis[key] = [] } 
-          //   anyThis[key].push(parseFloat(val))
-          //   break
-          // case SyntaxParamSimpleType.intArray:
-          //   if (!anyThis[key]) { anyThis[key] = [] } 
-          //   anyThis[key].push(parseInt(val, 10))
-          //   break
-          default:
-            anyThis[key] = item.value
-            break;
+      if (item instanceof Object && this.TYPES[item.key] !== undefined) {
+        var typeType = this.TYPES[item.key]
+        if (typeType instanceof Array) {
+          if (!anyThis[item.key]) {
+            anyThis[item.key] = []
+          }
+          anyThis[item.key] = anyThis[item.key].concat(this.GetSyntaxValue(item, typeType))
+        } 
+        else {
+          anyThis[item.key] = this.GetSyntaxValue(item.value, this.TYPES[item.key])
         }
       }
     }
@@ -120,7 +85,11 @@ export abstract class SyntaxParam {
   private GetSyntaxValue(value:SyntaxValue, type:SyntaxParamType):any 
   {
     if (type instanceof Array) {
-      return (value as SyntaxItem[]).map(item=>this.GetSyntaxValue(item, type[0]))
+      if (value instanceof Array) {
+        return (value as SyntaxItem[]).map(item=>this.GetSyntaxValue(item, type))
+      } else {
+        return this.GetSyntaxValue(value, type[0])
+      }
     } else if (type instanceof Object) {
       if (value instanceof Array) {
         var obj:any = {}
@@ -133,12 +102,14 @@ export abstract class SyntaxParam {
             //Todo
           }
         }
+        return obj
       } else if (value instanceof Object) {
         if(type[value.key] !== undefined) {
           obj[value.key] = this.GetSyntaxValue(value.value, type[value.key])
         }
     }
     } else {
+      if (value )
       return this.GetSyntaxValueSimple(value as string, type)
     }
   }
