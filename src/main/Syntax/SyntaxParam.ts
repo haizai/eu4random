@@ -60,38 +60,26 @@ export abstract class SyntaxParam {
     }
   }
   SetSyntaxData(data:SyntaxItem[]) {
-    // for(let key in this.TYPES) {
-    //   // if (this.key)
-    // }
-    // if (this.TYPES.Any !== undefined) {
-
-    // }
     var anyThis = this as any
-    for (var item of data) {
+    this.ObjSetKeyValueItems(this as any, data, this.TYPES)
+  }
+  // [{key: k1, value: v1}, {key: k2, value: v2} ...] => {k1: v1, k2: v2}
+  private ObjSetKeyValueItems(obj: any, items:SyntaxItem[], type: SyntaxParamKeyValueType) {
+    for(let item of items) {
       if (item instanceof Object) {
-        var typeType = this.TYPES[item.key]
-        if (typeType !== undefined) {
-          this.ObjSetSyntaxValue(this, item, typeType)
-        } 
-        else {
-          if (anyThis.ANY === undefined) {
-            anyThis.ANY = {}
+        if(type[item.key] !== undefined) {
+          this.ObjSetSyntaxValue(obj, item, type[item.key])
+        } else {
+          if (type.ANY !== undefined) {
+            if (obj.ANY === undefined) obj.ANY = {}
+            this.ObjSetSyntaxValue(obj.ANY, item, type.ANY)
           }
-          this.ObjSetSyntaxValue(anyThis.ANY, item, this.TYPES.ANY)
-          // if (anyType !== undefined) {
-          //   if (anyType instanceof Array) {
-          //     if (!anyThis[item.key]) {
-          //       anyThis[item.key] = []
-          //     }
-          //     anyThis[item.key] = anyThis[item.key].concat(this.GetSyntaxValue(item.value, anyType))
-          //   } 
-          //   else {
-          //     anyThis[item.key] = this.GetSyntaxValue(item.value, this.TYPES[item.key])
-          //   }
-          // }
         }
+      } else {
+        //Todo
       }
     }
+    return obj
   }
   // obj[item.key] = obj[item.value] => type
   private ObjSetSyntaxValue(obj: any, item:SyntaxKeyValue, type: SyntaxParamType) {
@@ -121,15 +109,8 @@ export abstract class SyntaxParam {
     } else if (type instanceof Object) {
       if (value instanceof Array) {
         var obj:any = {}
-        for(let valueItem of value) {
-          if (valueItem instanceof Object) {
-            if(type[valueItem.key] !== undefined) {
-              obj[valueItem.key] = this.GetSyntaxValue(valueItem.value, type[valueItem.key])
-            }
-          } else {
-            //Todo
-          }
-        }
+        this.ObjSetKeyValueItems(obj, value, type)
+        return obj
       } else if (value instanceof Object) {
         if(type[value.key] !== undefined) {
           obj[value.key] = this.GetSyntaxValue(value.value, type[value.key])

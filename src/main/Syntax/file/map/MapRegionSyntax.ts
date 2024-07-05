@@ -1,8 +1,20 @@
+import { FileParamSyntax } from "../../FileParamSyntax"
 import FileSyntax from "../../FileSyntax"
+import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
 
-
-export default class MapRegionSyntax extends FileSyntax {
-  relativePath = ["map", "region.txt"]
-  handleData(): void {
+class MapRegionParam extends SyntaxParam {
+  CreateInstance = () => new MapRegionParam()
+  ANY: {[key: string]: {
+    areas: string[]
+  }}
+  TYPES = {
+    ANY: {
+      areas: [SyntaxParamSimpleType.string]
+    }
   }
+}
+
+export default class MapRegionSyntax extends FileParamSyntax<MapRegionParam> {
+  param: MapRegionParam = new MapRegionParam();
+  relativePath = ["map", "region.txt"]
 }

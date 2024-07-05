@@ -1,8 +1,16 @@
+import { FileParamSyntax } from "../../FileParamSyntax"
 import FileSyntax from "../../FileSyntax"
+import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
 
-
-export default class MapClimateSyntax extends FileSyntax {
-  relativePath = ["map", "climate.txt"]
-  handleData(): void {
+class MapClimateParam extends SyntaxParam {
+  CreateInstance = () => new MapClimateParam()
+  ANY: {[key: string]: [number]}
+  TYPES = {
+    ANY: [SyntaxParamSimpleType.int]
   }
+}
+
+export default class MapClimateSyntax extends FileParamSyntax<MapClimateParam> {
+  param: MapClimateParam = new MapClimateParam();
+  relativePath = ["map", "climate.txt"]
 }

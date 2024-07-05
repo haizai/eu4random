@@ -1,14 +1,5 @@
 import FileSyntax from "./FileSyntax"
-import { SyntaxKeyValue } from "./Syntax"
-import { SyntaxParam, SyntaxParamKeyValueType, SyntaxParamSimpleType, SyntaxParamType } from "./SyntaxParam"
-
-// export class SyntaxCountryParam extends SyntaxParam {
-//   CreateInstance = () => new SyntaxCountryParam()
-//   ANY: string
-//   TYPES = {
-//     ANY: SyntaxParamSimpleType.string
-//   }
-// }
+import { SyntaxParam } from "./SyntaxParam"
 
 export abstract class FileParamSyntax<T extends SyntaxParam> extends FileSyntax {
   abstract param: T
