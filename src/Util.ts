@@ -60,4 +60,34 @@ export default class Util {
     if (m1 < m2) return false
     return d1 > d2
   }
+  static randomFromArray<T>(array: T[]): T {
+    return array[this.random(0, array.length - 1)]
+  }
+  static random(min:number, max:number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  static findMaxIndex(numbers:number[]) {
+    let maxIndex = -1;
+    let maxValue = -Infinity;
+    
+    for (let i = 0; i < numbers.length; i++) {
+      if (numbers[i] > maxValue) {
+        maxValue = numbers[i];
+        maxIndex = i;
+      }
+    }
+    return maxIndex
+  }
+  static calMinIndex(numbers:number[]) {
+    let minIndex = -1;
+    let minValue = +Infinity;
+    
+    for (let i = 0; i < numbers.length; i++) {
+      if (numbers[i] < minValue) {
+        minValue = numbers[i];
+        minIndex = i;
+      }
+    }
+    return minIndex
+  }
 }

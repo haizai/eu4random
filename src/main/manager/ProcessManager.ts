@@ -17,6 +17,13 @@ export default class ProcessManager {
   }
   selectableCountry :Set<string> = new Set() // 可选的国家
   waitUseProvince :Set<number> = new Set()// 待选的省份
+  usedCountry:string[] = []
+  provinceWeight: {
+    [province: number]: {
+      tag: string,
+      weight: number,
+    }[],
+  } = {}
 
 
   async initData() {
@@ -40,17 +47,59 @@ export default class ProcessManager {
       }
       this.countryAddProvince(tag, capital)
     });
+    this.waitUseProvince.forEach(province => {
+      this.provinceWeight[province] = Array.from(this.selectableCountry).map(tag=>{
+        return {
+          tag,
+          weight: 10000 / Managers.Province.calDistanceSquare(province,this.countryDir[tag].capital)
+        }
+      }).sort((a, b)=>b.weight - a.weight)
+    }) 
 
-    for(var tag in this.countryDir) {
-      let lands = this.getNowCountryAdjacentLands(tag)
-      lands.forEach(land => this.countryAddProvince(tag, land))
+    this.usedCountry = Array.from(this.selectableCountry)
+
+    
+    var temp = 0
+    while(this.usedCountry.length > 0 && temp < this.selectableCountry.size) {
+      for(var i = this.usedCountry.length -1; i>=0; i--) {
+        do {
+          var doNext = false;
+          var tag = this.usedCountry[i]
+          let lands = this.getNowCountryAdjacentLands(tag)
+          lands.forEach(land => {
+            var weight = this.provinceWeight[land]
+            if(weight && weight[temp].tag == tag) {
+              doNext = true;
+              this.countryAddProvince(tag, land)
+            }
+          })
+          if (lands.length == 0) {
+            this.usedCountry.splice(i, 1)
+          }
+        } while (doNext)
+      }
+      temp++
     }
+
+    // do {
+    //   var tag = Util.randomFromArray(this.usedCountry)
+    //   let lands = this.getNowCountryAdjacentLands(tag)
+    //   if (lands.length == 0) {
+    //     this.usedCountry.splice(this.usedCountry.indexOf(tag), 1)
+    //   } else {
+    //     var index = Util.calMinIndex(lands.map(land=>Managers.Province.calDistanceSquare(land, this.countryDir[tag].capital)))
+    //     this.countryAddProvince(tag, lands[index])
+    //   }
+    // } while(this.usedCountry.length > 0)
 
     for(let tag in this.countryDir) {
       let entry = this.countryDir[tag]
       for(let province of entry.provinces) {
         await Managers.File.HistoryProvinces.setOwnerThenWriteFile(province.toString(), tag)
       }
+    }
+    for(let province of this.waitUseProvince) {
+      await Managers.File.HistoryProvinces.setOwnerThenWriteFile(province.toString(), "{}")
     }
   }
   private countryAddProvince(country:string, province: number) {

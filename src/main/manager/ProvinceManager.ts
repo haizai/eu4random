@@ -48,6 +48,16 @@ class ProvinceManager {
     set.delete(province)
     return Array.from(set)
   }
+  getCityPosInt(provinceId: number) {
+    var pos = Managers.File.MapPositions.param.ANY[provinceId].position
+    var posInt = Managers.Map.ToPosInt(pos[0], pos[1])
+    return posInt
+  }
+  calDistanceSquare(province1: number,province2: number) {
+    let provincePosInt1 = this.getCityPosInt(province1)
+    let provincePosInt2 = this.getCityPosInt(province2)
+    return Managers.Map.calDistanceSquare(provincePosInt1, provincePosInt2)
+  }
 
 
   // async calProvinceData() {

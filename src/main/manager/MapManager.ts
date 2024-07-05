@@ -45,11 +45,6 @@ class MapManager {
   getColorIntByPos(x:number, y:number): number{
     return Util.calColorInt(...this.getColorByPos(x,y))
   }
-  getProvinceCityPosInt(provinceId: string) {
-    var positions = Util.SyntaxArrayFindOne(Util.SyntaxArrayFindOne(Managers.File.MapPositions.data, provinceId), "position") as string[]
-    var posInt = Managers.Map.ToPosInt(parseInt(positions[0]), parseInt(positions[1]))
-    return posInt
-  }
   calDistanceSquare(posInt1:number, posInt2:number) {
     var [x1, y1] = this.ToPos(posInt1);
     var [x2, y2] = this.ToPos(posInt2);
