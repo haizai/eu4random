@@ -68,25 +68,53 @@ export abstract class SyntaxParam {
     // }
     var anyThis = this as any
     for (var item of data) {
-      if (item instanceof Object && this.TYPES[item.key] !== undefined) {
+      if (item instanceof Object) {
         var typeType = this.TYPES[item.key]
-        if (typeType instanceof Array) {
-          if (!anyThis[item.key]) {
-            anyThis[item.key] = []
-          }
-          anyThis[item.key] = anyThis[item.key].concat(this.GetSyntaxValue(item, typeType))
+        if (typeType !== undefined) {
+          this.ObjSetSyntaxValue(this, item, typeType)
         } 
         else {
-          anyThis[item.key] = this.GetSyntaxValue(item.value, this.TYPES[item.key])
+          if (anyThis.ANY === undefined) {
+            anyThis.ANY = {}
+          }
+          this.ObjSetSyntaxValue(anyThis.ANY, item, this.TYPES.ANY)
+          // if (anyType !== undefined) {
+          //   if (anyType instanceof Array) {
+          //     if (!anyThis[item.key]) {
+          //       anyThis[item.key] = []
+          //     }
+          //     anyThis[item.key] = anyThis[item.key].concat(this.GetSyntaxValue(item.value, anyType))
+          //   } 
+          //   else {
+          //     anyThis[item.key] = this.GetSyntaxValue(item.value, this.TYPES[item.key])
+          //   }
+          // }
         }
       }
     }
+  }
+  // obj[item.key] = obj[item.value] => type
+  private ObjSetSyntaxValue(obj: any, item:SyntaxKeyValue, type: SyntaxParamType) {
+    if (type !== undefined) {
+      if (type instanceof Array) {
+        this.ObjSetSyntaxValueArrayType(obj, item, type)
+      } 
+      else {
+        obj[item.key] = this.GetSyntaxValue(item.value, type)
+      }
+    }
+  }
+  private ObjSetSyntaxValueArrayType(obj: any, item:SyntaxKeyValue, type: SyntaxParamArrayType) {
+    if (!obj[item.key]) {
+      obj[item.key] = []
+    }
+    obj[item.key] = obj[item.key].concat(this.GetSyntaxValue(item.value, type))
   }
   private GetSyntaxValue(value:SyntaxValue, type:SyntaxParamType):any 
   {
     if (type instanceof Array) {
       if (value instanceof Array) {
-        return (value as SyntaxItem[]).map(item=>this.GetSyntaxValue(item, type))
+        return (value as SyntaxItem[]).map(item=>this.GetSyntaxValue(item, type[0]))
       } else {
         return this.GetSyntaxValue(value, type[0])
       }
@@ -102,12 +130,12 @@ export abstract class SyntaxParam {
             //Todo
           }
         }
-        return obj
       } else if (value instanceof Object) {
         if(type[value.key] !== undefined) {
           obj[value.key] = this.GetSyntaxValue(value.value, type[value.key])
         }
-    }
+      }
+      return obj
     } else {
       if (value )
       return this.GetSyntaxValueSimple(value as string, type)

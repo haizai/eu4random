@@ -1,4 +1,4 @@
-import CommonCountrytagsSyntax from "../Syntax/file/common/CommonCountrytagsSyntax"
+import CommonCountrytagsSyntax from "../Syntax/file/common/CommonCountryTagsSyntax"
 import CommonCulturesSyntax from "../Syntax/file/common/CommonCulturesSyntax"
 import HistoryCountriesSyntax from "../Syntax/file/history/HistoryCountriesSyntax"
 import HistoryProvincesSyntax from "../Syntax/file/history/HistoryProvincesSyntax"
@@ -32,19 +32,19 @@ class FileManager {
   CommonCultures: CommonCulturesSyntax = new CommonCulturesSyntax()
   
   async parseAllFile() {
-    await this.MapAmbientObject.parseFile()
-    await this.MapArea.parseFile()
-    await this.MapClimate.parseFile()
-    await this.MapDefalut.parseFile()
-    await this.MapPositions.parseFile()
-    await this.MapContinent.parseFile()
-    await this.MapRegion.parseFile()
-    await this.MapSeasons.parseFile()
-    await this.MapSuperregion.parseFile()
-    await this.MapTerrain.parseFile()
+    // await this.MapAmbientObject.parseFile()
+    // await this.MapArea.parseFile()
+    // await this.MapClimate.parseFile()
+    // await this.MapDefalut.parseFile()
+    // await this.MapPositions.parseFile()
+    // await this.MapContinent.parseFile()
+    // await this.MapRegion.parseFile()
+    // await this.MapSeasons.parseFile()
+    // await this.MapSuperregion.parseFile()
+    // await this.MapTerrain.parseFile()
 
-    await this.HistoryProvinces.parseFile()
-    await this.HistoryCountries.parseFile()
+    // await this.HistoryProvinces.parseFile()
+    // await this.HistoryCountries.parseFile()
     
     await this.CommonCountrytags.parseFile()
     await this.CommonCultures.parseFile()
