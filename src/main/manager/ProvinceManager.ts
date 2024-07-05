@@ -35,6 +35,21 @@ interface ColorProvinceDir {
 class ProvinceManager {
   data: ProvinceData = {}
   private colorIntDir: ColorProvinceDir = {}
+
+  isSea = (province: number) => Managers.File.MapDefalut.param.sea_starts.includes(province)
+  isLake = (province: number) => Managers.File.MapDefalut.param.lakes.includes(province)
+  isImpassableLand = (province: number) => Managers.File.MapClimate.param.ANY.impassable.includes(province)
+  isLand = (province: number) => !this.isSea(province) && !this.isLake(province) && !this.isImpassableLand(province)
+  getAdjacentProvinces = (province: number) => Array.from(this.data[province].adjacentProvinces)
+  getAdjacentLands = (province: number) => this.getAdjacentProvinces(province).filter(prov=>this.isLand(prov))
+  getSameSeaLands = (province: number) => {
+    var set = new Set<number>()
+    this.getAdjacentProvinces(province).filter(prov=>this.isSea(prov)).forEach(sea=>this.getAdjacentLands(sea).forEach(land=>set.add(land)))
+    set.delete(province)
+    return Array.from(set)
+  }
+
+
   // async calProvinceData() {
   //   this.initData()
   //   await this.ReadDefinition()

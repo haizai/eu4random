@@ -3,6 +3,7 @@ import Global from "./Global";
 import { Syntax } from "./Syntax/Syntax";
 import Managers from "./manager/Managers";
 import os from "node:os"
+import fs from "node:fs/promises"
 import process from "node:process"
 import path from "node:path"
 import ModDescriptionSyntax from "./Syntax/file/ModDescriptionSyntax";
@@ -32,6 +33,7 @@ interface CountryTodo {
 async function Todo() {
   await initData();
   
+  await fs.rm(path.join(Global.eu4DocumentsPath, "mod", Global.projectName), {recursive: true})
   var mod = new ModDescriptionSyntax()
   mod.initData()
   await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))
@@ -39,7 +41,7 @@ async function Todo() {
 
   // await nearestProvince()
 
-  Managers.Process.initData()
+  await Managers.Process.initData()
 }
 
 // 首都不变, 其他有人的省份给最近的国家
