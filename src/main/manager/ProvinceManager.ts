@@ -31,16 +31,30 @@ interface ColorProvinceDir {
   [colorInt: number]: number
 }
 
+interface Adjacency {
+  From: number;
+  To: number;
+  Type: string; // sea, canal, lake+
+  Through: number;
+  start_x: number;
+  start_y: number;
+  stop_x: number;
+  stop_y: number;
+  Comment: string;
+}
+
 
 class ProvinceManager {
-  data: ProvinceData = {}
+  private data: ProvinceData = {}
   private colorIntDir: ColorProvinceDir = {}
+  private adjas:Adjacency[] = []
+  private acrossWaterProvinceDir: {[province: number]: number[]} = {}
 
   isSea = (province: number) => Managers.File.MapDefalut.param.sea_starts.includes(province)
   isLake = (province: number) => Managers.File.MapDefalut.param.lakes.includes(province)
   isImpassableLand = (province: number) => Managers.File.MapClimate.param.ANY.impassable.includes(province)
   isLand = (province: number) => !this.isSea(province) && !this.isLake(province) && !this.isImpassableLand(province)
-  getAdjacentProvinces = (province: number) => Array.from(this.data[province].adjacentProvinces)
+  getAdjacentProvinces = (province: number) => Array.from(this.data[province].adjacentProvinces).concat(this.getAcrossWaterAdjacentProvinces(province))
   getAdjacentLands = (province: number) => this.getAdjacentProvinces(province).filter(prov=>this.isLand(prov))
   getSameSeaLands = (province: number) => {
     var set = new Set<number>()
@@ -58,14 +72,10 @@ class ProvinceManager {
     let provincePosInt2 = this.getCityPosInt(province2)
     return Managers.Map.calDistanceSquare(provincePosInt1, provincePosInt2)
   }
-
-
-  // async calProvinceData() {
-  //   this.initData()
-  //   await this.ReadDefinition()
-  //   this.fillColorIntDir()
-  //   this.fillAdjacentProvince()
-  // }
+  // 是否跨海相邻
+  getAcrossWaterAdjacentProvinces(province:number) {
+    return this.acrossWaterProvinceDir[province] || []
+  }
   initData() {
     for(var id of Managers.File.MapPositions.GetProvinceIds()) {
       this.data[id] = {
@@ -75,22 +85,6 @@ class ProvinceManager {
       }
     }
   }
-  // async ReadPositons() {
-  //   const positionsTxt = path.join(Global.eu4RootPath, "map", "positions.txt")
-  //   var positionsStr = await fs.readFile(positionsTxt,{encoding:"latin1"})
-  //   var posArr = positionsStr.split("#")
-  //   for(var i = 1; i < posArr.length; i++) {
-  //     var [position, id] = this.parsePosition(posArr[i]) 
-  //     if (position != null) {
-  //       this.data[id] = {
-  //         id,
-  //         // position,
-  //         allPos: [],
-  //         adjacentProvinces: new Set<number>(),
-  //       }
-  //     }
-  //   }
-  // }
   async ReadDefinition() {
     const definitionScv = path.join(Global.eu4GamePath, "map", "definition.csv")
     var str = await fs.readFile(definitionScv,{encoding:"latin1"})
@@ -103,12 +97,24 @@ class ProvinceManager {
       }
     }
   }
-  async test() {
-    // const testTxt = path.join(Global.eu4RootPath, "history","provinces", "1-Uppland.txt")
-    // const testTxt = path.join(Global.eu4RootPath, "map","default.map")
-    // var str = await fs.readFile(testTxt,{encoding:"latin1"})
-    // new Syntax().parse(str)
-
+  async ReadAdjacencies() {
+    const adjacenciesScv = path.join(Global.eu4GamePath, "map", "adjacencies.csv")
+    var str = await fs.readFile(adjacenciesScv,{encoding:"latin1"})
+    var arr = str.split("\n")
+    for(var i = 1; i < arr.length; i++) {
+      var adja = this.parseAdjacency(arr[i])
+      if (adja) {
+        this.adjas.push(adja)
+        if (!this.acrossWaterProvinceDir[adja.From]) {
+          this.acrossWaterProvinceDir[adja.From] = []
+        }
+        this.acrossWaterProvinceDir[adja.From].push(adja.To)
+        if (!this.acrossWaterProvinceDir[adja.To]) {
+          this.acrossWaterProvinceDir[adja.To] = []
+        }
+        this.acrossWaterProvinceDir[adja.To].push(adja.From)
+      }
+    }
   }
   fillAdjacentProvince() {
     for (const id in this.data) {
@@ -123,9 +129,6 @@ class ProvinceManager {
         })
       })
     }
-    this.data[1816].adjacentProvinces.forEach(element => {
-      // console.log(this.data[element].position.name)
-    });
   }
   getProvinceIdByColorInt(colorInt:number) {
     return this.colorIntDir[colorInt]
@@ -179,6 +182,36 @@ class ProvinceManager {
       blue,
     }
     return [pos, id]
+  }
+  parseAdjacency(str: string): Adjacency {
+    if (!str) {
+      return null
+    }
+    var arr = str.trim().split(";");
+    if (arr.length < 9) {
+      return null
+    }
+    var From = parseInt(arr[0])
+    var To = parseInt(arr[1])
+    var Type = arr[2]
+    var Through = parseInt(arr[3])
+    var start_x = parseInt(arr[4])
+    var start_y = parseInt(arr[5])
+    var stop_x = parseInt(arr[6])
+    var stop_y = parseInt(arr[7])
+    var Comment = arr[8]
+    var adja: Adjacency = {
+      From,
+      To,
+      Type,
+      Through,
+      start_x,
+      start_y,
+      stop_x,
+      stop_y,
+      Comment,
+    }
+    return adja
   }
 }
 

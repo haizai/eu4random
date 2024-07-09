@@ -18,6 +18,7 @@ async function initData() {
   await Managers.Map.ReadProvinces();
   Managers.Province.initData()
   await Managers.Province.ReadDefinition()
+  await Managers.Province.ReadAdjacencies()
   Managers.Province.fillColorIntDir();
   await Managers.Map.fillAllPos()
   Managers.Province.fillAdjacentProvince()
@@ -33,7 +34,13 @@ interface CountryTodo {
 async function Todo() {
   await initData();
   
-  await fs.rm(path.join(Global.eu4DocumentsPath, "mod", Global.projectName), {recursive: true})
+  try {
+    await fs.access(path.join(Global.eu4DocumentsPath, "mod", Global.projectName))
+    await fs.rm(path.join(Global.eu4DocumentsPath, "mod", Global.projectName), {recursive: true})
+  } catch {
+    
+  } 
+  
   var mod = new ModDescriptionSyntax()
   mod.initData()
   await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))

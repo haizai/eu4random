@@ -6,7 +6,9 @@ interface CountryEntry {
   capital: number,
   provinces: number[],
   mapAdjacentLands: number[], // 只和provinces相关
+  mapSameSeaLands: number[], // 只和provinces相关
 }
+
 
 export default class ProcessManager {
 
@@ -24,6 +26,7 @@ export default class ProcessManager {
       weight: number,
     }[],
   } = {}
+
 
 
   async initData() {
@@ -44,6 +47,7 @@ export default class ProcessManager {
         capital,
         provinces: [],
         mapAdjacentLands: [],
+        mapSameSeaLands: [],
       }
       this.countryAddProvince(tag, capital)
     });
@@ -73,13 +77,41 @@ export default class ProcessManager {
               this.countryAddProvince(tag, land)
             }
           })
-          if (lands.length == 0) {
+          let seaSealands = this.getNowCountrySameSeaLands(tag)
+          seaSealands.forEach(land => {
+            var weight = this.provinceWeight[land]
+             if(weight && weight[temp].tag == tag) {
+              if (weight[temp+1].weight < weight[temp].weight * 0.5) {
+                // 跨海0.5倍权重
+                doNext = true;
+                this.countryAddProvince(tag, land)
+              }  
+            }
+          })
+
+          if (lands.length == 0 && seaSealands.length == 0) {
             this.usedCountry.splice(i, 1)
           }
         } while (doNext)
       }
       temp++
     }
+    var provinces = Array.from(this.waitUseProvince)
+    // 对于所有未分配的省份, 寻找隔海相望的省份中权重最大的那个
+    // provinces.forEach(province => {
+    //   this.provinceWeight[province].some(weight=>{
+    //     if(this.getNowCountrySameSeaLands(weight.tag).includes(province)) {
+    //       this.countryAddProvince(weight.tag, province)
+    //       return true
+    //     }
+    //     return false
+    //   })
+    // });
+    
+    // 对于所有未分配的省份, 直接分配给权重最大的
+    provinces.forEach(province => {
+      this.countryAddProvince(this.provinceWeight[province][0].tag,province)
+    });
 
     // do {
     //   var tag = Util.randomFromArray(this.usedCountry)
@@ -114,10 +146,20 @@ export default class ProcessManager {
         entry.mapAdjacentLands.push(land)
       }
     })
+    var newSameSea = Managers.Province.getSameSeaLands(province)
+    newSameSea.forEach(land=>{
+      if (!entry.provinces.includes(land) && !entry.mapSameSeaLands.includes(land)) {
+        entry.mapSameSeaLands.push(land)
+      }
+    })
 
   }
   // 从未被使用的省份里, 查询该国家的相邻省份
   private getNowCountryAdjacentLands(country:string) {
     return this.countryDir[country].mapAdjacentLands.filter(land=>this.waitUseProvince.has(land))
+  }
+  // 从未被使用的省份里, 查询该国家的隔海相望省份
+  private getNowCountrySameSeaLands(country:string) {
+    return this.countryDir[country].mapSameSeaLands.filter(land=>this.waitUseProvince.has(land))
   }
 }
