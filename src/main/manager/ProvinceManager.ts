@@ -14,18 +14,16 @@ interface ProvinceItem {
   definition?: Definition;
   allPos: number[]
   adjacentProvinces: Set<number>
+
+  continent?: string // 大洲
+  area?: string // 地区
+  region?: string // 区域
+  superregion?: string // 大区
 }
 interface Definition {
   red: number;
   green: number;
   blue: number;
-}
-interface Position {
-  name: string;
-  //城市位置，单位位置，文本，海港，商路，单位作战点，信风。
-  position: number[];
-  rotation: number[];
-  height: number[]
 }
 interface ColorProvinceDir {
   [colorInt: number]: number
@@ -49,6 +47,8 @@ class ProvinceManager {
   private colorIntDir: ColorProvinceDir = {}
   private adjas:Adjacency[] = []
   private acrossWaterProvinceDir: {[province: number]: number[]} = {}
+  private areaToRegion: {[area:string]: string} = {}
+  private regionToSuperRegion: {[region:string]: string} = {}
 
   isSea = (province: number) => Managers.File.MapDefalut.param.sea_starts.includes(province)
   isLake = (province: number) => Managers.File.MapDefalut.param.lakes.includes(province)
@@ -75,6 +75,40 @@ class ProvinceManager {
   // 是否跨海相邻
   getAcrossWaterAdjacentProvinces(province:number) {
     return this.acrossWaterProvinceDir[province] || []
+  }
+  getContinent = (province:number) => this.data[province].continent
+
+  calDataByFiles() {
+    for(var continent in Managers.File.MapContinent.param.ANY) {
+      var provinces = Managers.File.MapContinent.param.ANY[continent]
+      provinces.forEach(province=>this.data[province].continent = continent)
+    }
+    for(var region in Managers.File.MapRegion.param.ANY) {
+      var regions = Managers.File.MapRegion.param.ANY[region]
+      regions?.areas?.forEach(area=>this.areaToRegion[area] = region)
+    }
+    for(var superregion in Managers.File.MapSuperregion.param.ANY) {
+      var superregions = Managers.File.MapSuperregion.param.ANY[superregion]
+      superregions.forEach(region=>this.regionToSuperRegion[region] = superregion)
+    }
+    
+    for(var area in Managers.File.MapArea.param.ANY) {
+      var provinces = Managers.File.MapArea.param.ANY[area]
+      provinces.forEach(province=>{
+        if (this.data[province] == null) {
+          return
+        }
+        this.data[province].area = area
+        let region = this.areaToRegion[area]
+        if (region) {
+          this.data[province].region = region
+          let superregion = this.regionToSuperRegion[region]
+          if (superregion) {
+            this.data[province].superregion = superregion
+          }
+        }
+      })
+    }
   }
   initData() {
     for(var id of Managers.File.MapPositions.GetProvinceIds()) {

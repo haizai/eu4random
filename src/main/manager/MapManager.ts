@@ -17,6 +17,12 @@ class MapManager {
     this.width = this.bmp.biWidth
     this.height = this.bmp.biHeight
   }
+
+   
+  copyContinentRange():{[key:string]:number[]} {
+    return JSON.parse(JSON.stringify(Managers.File.MapContinent.param.ANY))
+  }
+
   fillAllPos() {
     for(var x = 0; x < this.width; x++) {
       for(var y = 0; y < this.height; y++) {

@@ -102,7 +102,7 @@ export abstract class SyntaxParam {
   {
     if (type instanceof Array) {
       if (value instanceof Array) {
-        return (value as SyntaxItem[]).map(item=>this.GetSyntaxValue(item, type[0]))
+        return (value as SyntaxItem[]).map(item=>this.GetSyntaxValue(item, type[0])).filter(item=>item!==undefined)
       } else {
         return this.GetSyntaxValue(value, type[0])
       }
@@ -118,8 +118,10 @@ export abstract class SyntaxParam {
       }
       return obj
     } else {
-      if (value )
-      return this.GetSyntaxValueSimple(value as string, type)
+      if (typeof value == "string") {
+        return this.GetSyntaxValueSimple(value, type)
+      }
+      return undefined
     }
   }
   private GetSyntaxValueSimple(val:string, type: SyntaxParamSimpleType) {

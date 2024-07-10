@@ -63,6 +63,11 @@ export default class Util {
   static randomFromArray<T>(array: T[]): T {
     return array[this.random(0, array.length - 1)]
   }
+  static randomSpliceFromArray<T>(array: T[]): T {
+    var index = this.random(0, array.length - 1)
+    var item = array.splice(index, 1)[0]
+    return item
+  }
   static random(min:number, max:number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }

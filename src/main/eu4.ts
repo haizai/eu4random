@@ -22,6 +22,7 @@ async function initData() {
   Managers.Province.fillColorIntDir();
   await Managers.Map.fillAllPos()
   Managers.Province.fillAdjacentProvince()
+  Managers.Province.calDataByFiles()
 }
 
 interface CountryTodo {

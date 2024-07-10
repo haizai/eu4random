@@ -4,7 +4,7 @@ import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
 
 class MapRegionParam extends SyntaxParam {
   CreateInstance = () => new MapRegionParam()
-  ANY: {[key: string]: {
+  ANY: {[region: string]: {
     areas: string[]
   }}
   TYPES = {

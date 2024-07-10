@@ -27,6 +27,40 @@ export default class ProcessManager {
     }[],
   } = {}
 
+  calCapital() {
+    // 使用开局的首都
+    // this.selectableCountry.forEach(tag => {
+    //   let capital = Managers.File.HistoryCountries.Dir[tag].NowParam.capital
+    //   this.countryDir[tag] = {
+    //     tag,
+    //     capital,
+    //     provinces: [],
+    //     mapAdjacentLands: [],
+    //     mapSameSeaLands: [],
+    //   }
+    //   this.countryAddProvince(tag, capital)
+    // });
+
+    // 随机相同大陆
+    var continentRange = Managers.Map.copyContinentRange()
+    var tagDir:{[key:string]: string[]} = {}
+    for (const key in continentRange) {
+      tagDir[key] = [];
+      continentRange[key] = continentRange[key].filter(province=>this.waitUseProvince.has(province))
+    }
+    this.selectableCountry.forEach(tag => {
+      var continent = Managers.Province.getContinent(Managers.File.HistoryCountries.Dir[tag].NowParam.capital)
+      var capital = Util.randomSpliceFromArray(continentRange[continent])
+      this.countryDir[tag] = {
+        tag,
+        capital,
+        provinces: [],
+        mapAdjacentLands: [],
+        mapSameSeaLands: [],
+      }
+      this.countryAddProvince(tag, capital)
+    });
+  }
 
 
   async initData() {
@@ -39,18 +73,12 @@ export default class ProcessManager {
         this.waitUseProvince.add(parseInt(provinceId))
       }
     }
-    // 使用开局的首都
-    this.selectableCountry.forEach(tag => {
-      let capital = Managers.File.HistoryCountries.Dir[tag].NowParam.capital
-      this.countryDir[tag] = {
-        tag,
-        capital,
-        provinces: [],
-        mapAdjacentLands: [],
-        mapSameSeaLands: [],
-      }
-      this.countryAddProvince(tag, capital)
-    });
+
+    this.calCapital()
+
+    
+
+
     this.waitUseProvince.forEach(province => {
       this.provinceWeight[province] = Array.from(this.selectableCountry).map(tag=>{
         return {
