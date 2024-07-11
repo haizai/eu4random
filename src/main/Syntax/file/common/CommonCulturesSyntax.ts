@@ -1,5 +1,6 @@
+import { SyntaxParamSimpleType } from "../../../types"
 import { FileParamSyntax } from "../../FileParamSyntax"
-import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
+import { SyntaxParam } from "../../SyntaxParam"
 
 class CommonCulturesParam extends SyntaxParam {
   CreateInstance = () => new CommonCulturesParam()

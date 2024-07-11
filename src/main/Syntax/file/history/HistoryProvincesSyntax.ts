@@ -1,4 +1,5 @@
-import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
+import { SyntaxParamSimpleType } from "../../../types"
+import { SyntaxParam } from "../../SyntaxParam"
 import { HistroySyntax} from "./HistroySyntax"
 
 class HistoryProvinceParam extends SyntaxParam {
@@ -6,6 +7,7 @@ class HistoryProvinceParam extends SyntaxParam {
   owner?: string // 拥有者
   controller?: string // 控制者
   add_core?: string[] // 核心
+  remove_core?: string[] // 核心
   culture?: string // 文化
   religion?: string //宗教
   hre?: boolean //是否在神罗
@@ -20,6 +22,7 @@ class HistoryProvinceParam extends SyntaxParam {
     owner: SyntaxParamSimpleType.string,
     controller: SyntaxParamSimpleType.string,
     add_core: [SyntaxParamSimpleType.string],
+    remove_core: [SyntaxParamSimpleType.string],
     culture: SyntaxParamSimpleType.string,
     religion: SyntaxParamSimpleType.string,
     hre: SyntaxParamSimpleType.boolean,
@@ -33,6 +36,16 @@ class HistoryProvinceParam extends SyntaxParam {
   }
 
   CreateInstance = () => new HistoryProvinceParam()
+
+  GetCores() {
+    var cores = new Set(this.add_core)
+    if (this.remove_core) {
+      this.remove_core.forEach(core => {
+        cores.delete(core)
+      });
+    }
+    return Array.from(cores)
+  }
   
 }
 class HistoryProvincesSyntax extends HistroySyntax<HistoryProvinceParam> {

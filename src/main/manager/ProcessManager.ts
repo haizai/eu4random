@@ -1,4 +1,5 @@
 import Util from "../../Util";
+import { ProvinceRange } from "../types";
 import Managers from "./Managers";
 
 interface CountryEntry {
@@ -8,6 +9,19 @@ interface CountryEntry {
   mapAdjacentLands: number[], // 只和provinces相关
   mapSameSeaLands: number[], // 只和provinces相关
 }
+
+enum ConfigCapital {
+  Original,
+  RandomContinent,
+  RandomArea,
+  RandomRegion,
+  RandomSuperregion,
+
+  RandomOwner,
+  RandomCore,
+  RandomCulture
+}
+
 
 
 export default class ProcessManager {
@@ -27,39 +41,103 @@ export default class ProcessManager {
     }[],
   } = {}
 
-  calCapital() {
-    // 使用开局的首都
-    // this.selectableCountry.forEach(tag => {
-    //   let capital = Managers.File.HistoryCountries.Dir[tag].NowParam.capital
-    //   this.countryDir[tag] = {
-    //     tag,
-    //     capital,
-    //     provinces: [],
-    //     mapAdjacentLands: [],
-    //     mapSameSeaLands: [],
-    //   }
-    //   this.countryAddProvince(tag, capital)
-    // });
+  calCapital(config: ConfigCapital = ConfigCapital.Original) {
 
-    // 随机相同大陆
-    var continentRange = Managers.Map.copyContinentRange()
-    var tagDir:{[key:string]: string[]} = {}
-    for (const key in continentRange) {
-      tagDir[key] = [];
-      continentRange[key] = continentRange[key].filter(province=>this.waitUseProvince.has(province))
+    if (config == ConfigCapital.Original) {
+      this.selectableCountry.forEach(tag => {
+        let capital = Managers.File.HistoryCountries.Dir[tag].NowParam.capital
+        this.countryDir[tag] = {
+          tag,
+          capital,
+          provinces: [],
+          mapAdjacentLands: [],
+          mapSameSeaLands: [],
+        }
+        this.countryAddProvince(tag, capital)
+      });
+      return
     }
-    this.selectableCountry.forEach(tag => {
-      var continent = Managers.Province.getContinent(Managers.File.HistoryCountries.Dir[tag].NowParam.capital)
-      var capital = Util.randomSpliceFromArray(continentRange[continent])
-      this.countryDir[tag] = {
-        tag,
-        capital,
-        provinces: [],
-        mapAdjacentLands: [],
-        mapSameSeaLands: [],
+    let getProvinceFun:(province: number) => string
+    let getProvinceArrayFun:(province: number) => string[]
+    let getTagkey:(tag: string) => string
+    switch (config) {
+      case ConfigCapital.RandomContinent:
+        getProvinceFun = Managers.Province.getContinent
+        break
+      case ConfigCapital.RandomArea:
+        getProvinceFun = Managers.Province.getArea
+        break
+      case ConfigCapital.RandomRegion:
+        getProvinceFun = Managers.Province.getRegion
+        break
+      case ConfigCapital.RandomSuperregion:
+        getProvinceFun = Managers.Province.getSupreregion
+        break
+      case ConfigCapital.RandomOwner:
+        getProvinceFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.owner
+        break
+      case ConfigCapital.RandomCore:
+        getProvinceArrayFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.GetCores()
+        getTagkey = tag => tag
+        break
+      default:
+        break
+    }
+    let range:ProvinceRange = {}
+    this.waitUseProvince.forEach(land => {
+      if (getProvinceFun) {
+        var key = getProvinceFun(land)
+        if (key) {
+          if (!range[key]) {
+            range[key] = []
+          }
+          range[key].push(land)
+        } else {
+          if (!range.Undefined) {
+            range.Undefined = []
+          }
+          range.Undefined.push(land)
+        }
       }
-      this.countryAddProvince(tag, capital)
+      if (getProvinceArrayFun) {
+        var keys = getProvinceArrayFun(land)
+        keys.forEach(key=>{
+          if (key) {
+            if (!range[key]) {
+              range[key] = []
+            }
+            range[key].push(land)
+          } else {
+            if (!range.Undefined) {
+              range.Undefined = []
+            }
+            range.Undefined.push(land)
+          }
+        })
+      }
     });
+    this.selectableCountry.forEach(tag => {
+      // 默认使用开局首都的范围
+      if (!getTagkey) 
+        var key = getProvinceFun(Managers.File.HistoryCountries.Dir[tag].NowParam.capital)
+      else
+        var key = getTagkey(tag)
+      var capital = Util.randomFromArray(range[key].filter(x=>this.waitUseProvince.has(x)))
+      if (capital) {
+        this.countryDir[tag] = {
+          tag,
+          capital,
+          provinces: [],
+          mapAdjacentLands: [],
+          mapSameSeaLands: [],
+        }
+        this.countryAddProvince(tag, capital)
+      } else {
+        // 没有可用的首都, 该国家不存在
+        this.selectableCountry.delete(tag)
+      }
+    });
+
   }
 
 
@@ -74,7 +152,7 @@ export default class ProcessManager {
       }
     }
 
-    this.calCapital()
+    this.calCapital(ConfigCapital.RandomCore)
 
     
 
@@ -156,6 +234,9 @@ export default class ProcessManager {
       let entry = this.countryDir[tag]
       for(let province of entry.provinces) {
         await Managers.File.HistoryProvinces.setOwnerThenWriteFile(province.toString(), tag)
+      }
+      if (entry.capital != Managers.File.HistoryCountries.Dir[tag].NowParam.capital) {
+        await Managers.File.HistoryCountries.setCapitalThenWriteFile(tag, entry.capital)
       }
     }
     for(let province of this.waitUseProvince) {

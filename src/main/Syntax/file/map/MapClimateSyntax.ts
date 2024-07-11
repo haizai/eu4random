@@ -1,6 +1,7 @@
+import { SyntaxParamSimpleType } from "../../../types"
 import { FileParamSyntax } from "../../FileParamSyntax"
 import FileSyntax from "../../FileSyntax"
-import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
+import { SyntaxParam } from "../../SyntaxParam"
 
 class MapClimateParam extends SyntaxParam {
   CreateInstance = () => new MapClimateParam()

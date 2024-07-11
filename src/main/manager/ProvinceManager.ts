@@ -4,6 +4,7 @@ import Global from "../Global";
 import Util from "../../Util";
 import BMP from "../bmp";
 import Managers from "./Managers";
+import { ProvinceRange } from "../types";
 
 interface ProvinceData {
   [id:string]: ProvinceItem
@@ -18,7 +19,7 @@ interface ProvinceItem {
   continent?: string // 大洲
   area?: string // 地区
   region?: string // 区域
-  superregion?: string // 大区
+  superregion?: string // 次大陆
 }
 interface Definition {
   red: number;
@@ -77,6 +78,18 @@ class ProvinceManager {
     return this.acrossWaterProvinceDir[province] || []
   }
   getContinent = (province:number) => this.data[province].continent
+  getArea = (province:number) => this.data[province].area
+  getRegion = (province:number) => this.data[province].region
+  getSupreregion = (province:number) => this.data[province].superregion
+
+
+  // private regionRange:ProvinceRange = {}
+  // private superregionRange:ProvinceRange = {}
+   
+  // copyContinentRange = ():ProvinceRange => JSON.parse(JSON.stringify(Managers.File.MapContinent.param.ANY))
+  // copyAreaRange = ():ProvinceRange => JSON.parse(JSON.stringify(Managers.File.MapArea.param.ANY))
+  // copyRegionRange = ():ProvinceRange => JSON.parse(JSON.stringify(this.regionRange))
+  // copySuperregionRange = ():ProvinceRange => JSON.parse(JSON.stringify(this.superregionRange))
 
   calDataByFiles() {
     for(var continent in Managers.File.MapContinent.param.ANY) {
@@ -96,6 +109,7 @@ class ProvinceManager {
       var provinces = Managers.File.MapArea.param.ANY[area]
       provinces.forEach(province=>{
         if (this.data[province] == null) {
+          throw new Error(`province ${province} not exist in ProvinceManager`)
           return
         }
         this.data[province].area = area
@@ -109,6 +123,32 @@ class ProvinceManager {
         }
       })
     }
+
+    // for(var key in this.data) {
+    //   var item = this.data[key]
+    //   if (item.region) {
+    //     if (!this.regionRange[item.region]) {
+    //       this.regionRange[item.region] = []
+    //     }
+    //     this.regionRange[item.region].push(item.id)
+    //   } else {
+    //     if (!this.regionRange.Undefined) {
+    //       this.regionRange.Undefined
+    //     }
+    //     this.regionRange.Undefined.push(item.id)
+    //   }
+    //   if (item.superregion) {
+    //     if (!this.superregionRange[item.superregion]) {
+    //       this.superregionRange[item.superregion] = []
+    //     }
+    //     this.superregionRange[item.superregion].push(item.id)
+    //   } else {
+    //     if (!this.superregionRange.Undefined) {
+    //       this.superregionRange.Undefined
+    //     }
+    //     this.superregionRange.Undefined.push(item.id)
+    //   }
+    // }
   }
   initData() {
     for(var id of Managers.File.MapPositions.GetProvinceIds()) {

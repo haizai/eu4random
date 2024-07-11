@@ -1,35 +1,22 @@
+import { SyntaxParamArrayType, SyntaxParamKeyValueType, SyntaxParamSimpleType, SyntaxParamType } from "../types"
 import { SyntaxItem, SyntaxKeyValue, SyntaxValue } from "./Syntax"
 
-export enum SyntaxParamSimpleType {
-  any,
+// export declare enum SyntaxParamSimpleType {
+//   any,
+//   string,
+//   boolean,
+//   number,
+//   int,
+//   float,
 
-  string,
-  boolean,
-  number,
-  int,
-  float,
-
-  // stringArray,
-  // booleanArray,
-  // numberArray,
-  // intArray,
-  // floatArray,
-}
-
-// // 特殊标识符, 解析时按一定规则处理
-// export enum SyntaxIdentifier {
-//   None,
-//   CountryTag,
-//   ProvinceId,
-//   Time,
 // }
-export type SyntaxParamArrayType = SyntaxParamType[]
-export type SyntaxParamKeyValueType = {
-  ANY?: SyntaxParamType,
-  [key: string] : SyntaxParamType
-}
+// export declare type SyntaxParamArrayType = SyntaxParamType[]
+// export declare type SyntaxParamKeyValueType = {
+//   ANY?: SyntaxParamType,
+//   [key: string] : SyntaxParamType
+// }
 
-export type SyntaxParamType = SyntaxParamSimpleType | SyntaxParamArrayType | SyntaxParamKeyValueType
+// export declare type SyntaxParamType = SyntaxParamSimpleType | SyntaxParamArrayType | SyntaxParamKeyValueType
 
 export abstract class SyntaxParam {
   // IdentifierType: {
@@ -55,7 +42,11 @@ export abstract class SyntaxParam {
     var anyParam = param as any
     for (let key in this.TYPES) {
       if (anyParam[key] !== undefined) {
-        anyThis[key] = JSON.parse(JSON.stringify(anyParam[key]))
+        if (anyParam[key] instanceof Array && anyThis[key] instanceof Array) {
+          anyThis[key] = anyThis[key].concat(JSON.parse(JSON.stringify(anyParam[key])))
+        } else {
+          anyThis[key] = JSON.parse(JSON.stringify(anyParam[key]))
+        }
       }
     }
   }

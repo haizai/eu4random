@@ -1,4 +1,5 @@
-import { SyntaxParam, SyntaxParamSimpleType } from "../../SyntaxParam"
+import { SyntaxParamSimpleType } from "../../../types"
+import { SyntaxParam } from "../../SyntaxParam"
 import { HistroySyntax} from "./HistroySyntax"
 
 class HistoryCountryParam extends SyntaxParam {
@@ -27,6 +28,19 @@ class HistoryCountriesSyntax extends HistroySyntax<HistoryCountryParam> {
   protected createParam = () => new HistoryCountryParam()
   protected getDirKeyByFileName(filename: string): string{
     return filename.slice(0,3)
+  }
+  async setCapitalThenWriteFile(tag:string, capital: number) {
+    var fileName = this.Dir[tag]?.FileName
+    var data = this.dirData[fileName]
+    if (data) {
+      data.dataPushKeyValue("1444.11.11", [
+        {
+          key: "capital",
+          value: capital.toString(),
+        },
+      ])
+      await this.writeFile(this.Dir[tag].FileName)
+    }
   }
 }
 
