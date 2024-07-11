@@ -66,6 +66,12 @@ export default class Util {
     }
     return array[this.random(0, array.length - 1)]
   }
+  
+  static randomSpliceFromArray<T>(array: T[]): T {
+    var index = this.random(0, array.length - 1)
+    var item = array.splice(index, 1)[0]
+    return item
+  }
   static random(min:number, max:number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -92,5 +98,25 @@ export default class Util {
       }
     }
     return minIndex
+  }
+  static shuffleArray<T>(array: T[]): T[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      // 随机选择一个索引，范围从0到i（包括i）
+      const j = Math.floor(Math.random() * (i + 1));
+      // 交换元素array[i]和array[j]
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  static getRandomSubset<T>(array: T[], percentage: number): T[] {
+    // 计算需要筛选出的元素数量
+    const subsetSize = Math.floor(array.length * percentage);
+    
+    // 随机打乱数组
+    const shuffledArray = [].concat(array)
+    this.shuffleArray(shuffledArray);
+  
+    // 从打乱后的数组中取出所需数量的元素
+    return shuffledArray.slice(0, subsetSize);
   }
 }

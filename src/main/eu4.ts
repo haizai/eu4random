@@ -24,6 +24,7 @@ async function initData() {
   Managers.Province.fillAdjacentProvince()
   Managers.Province.calDataByFiles()
   Managers.Common.initData()
+  Managers.Country.initData()
 }
 
 interface CountryTodo {
@@ -51,6 +52,7 @@ async function Todo() {
   // await nearestProvince()
 
   await Managers.Process.initData()
+  console.log("End!!!!")
 }
 
 // 首都不变, 其他有人的省份给最近的国家

@@ -46,7 +46,6 @@ class HistoryProvinceParam extends SyntaxParam {
     }
     return Array.from(cores)
   }
-  
 }
 class HistoryProvincesSyntax extends HistroySyntax<HistoryProvinceParam> {
   'relativePath' = ["history", "provinces"]
