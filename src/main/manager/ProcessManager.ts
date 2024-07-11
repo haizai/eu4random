@@ -16,10 +16,15 @@ enum ConfigCapital {
   RandomArea,
   RandomRegion,
   RandomSuperregion,
-
   RandomOwner,
   RandomCore,
-  RandomCulture
+  RandomCulture,
+  RandomCultureGroup,
+  RandomWorld,
+  RandomReligion,
+  RandomReligionGroup,
+  RandomTechnologyGroup,
+  
 }
 
 
@@ -79,6 +84,30 @@ export default class ProcessManager {
       case ConfigCapital.RandomCore:
         getProvinceArrayFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.GetCores()
         getTagkey = tag => tag
+        break
+      case ConfigCapital.RandomCulture:
+        getProvinceFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.culture
+        getTagkey = tag => Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture
+        break
+      case ConfigCapital.RandomWorld:
+        getProvinceFun = (province: number) => "World"
+        getTagkey = tag => "World"
+        break
+      case ConfigCapital.RandomCultureGroup:
+        getProvinceFun = (province: number) => Managers.Common.getCultureGroupByCulture(Managers.File.HistoryProvinces.Dir[province].NowParam.culture)
+        getTagkey = tag => Managers.Common.getCultureGroupByCulture(Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture)
+        break
+      case ConfigCapital.RandomReligion:
+        getProvinceFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.religion
+        getTagkey = tag => Managers.File.HistoryCountries.Dir[tag].NowParam.religion
+        break
+      case ConfigCapital.RandomReligionGroup:
+        getProvinceFun = (province: number) => Managers.Common.getReligionGroupByRegion(Managers.File.HistoryProvinces.Dir[province].NowParam.religion)
+        getTagkey = tag => Managers.Common.getReligionGroupByRegion(Managers.File.HistoryCountries.Dir[tag].NowParam.religion)
+        break
+      case ConfigCapital.RandomTechnologyGroup:
+        getProvinceArrayFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.discovered_by
+        getTagkey = tag => Managers.File.HistoryCountries.Dir[tag].NowParam.technology_group
         break
       default:
         break
@@ -152,7 +181,7 @@ export default class ProcessManager {
       }
     }
 
-    this.calCapital(ConfigCapital.RandomCore)
+    this.calCapital(ConfigCapital.RandomReligion)
 
     
 

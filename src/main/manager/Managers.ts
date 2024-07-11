@@ -4,6 +4,7 @@ import ProvinceManager from "./ProvinceManager";
 import CountryManager from "./CountryManager";
 import WeightManager from "./WeightManager";
 import ProcessManager from "./ProcessManager";
+import CommonManager from "./CommonManager";
 
 export default class Managers {
   static Province: ProvinceManager = new ProvinceManager()
@@ -12,4 +13,5 @@ export default class Managers {
   static Country: CountryManager = new CountryManager()
   static Weight: WeightManager = new WeightManager()
   static Process: ProcessManager = new ProcessManager()
+  static Common: CommonManager = new CommonManager()
 }

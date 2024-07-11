@@ -23,6 +23,7 @@ async function initData() {
   await Managers.Map.fillAllPos()
   Managers.Province.fillAdjacentProvince()
   Managers.Province.calDataByFiles()
+  Managers.Common.initData()
 }
 
 interface CountryTodo {
