@@ -2,7 +2,6 @@ import FileManager from "./FileManager";
 import MapManager from "./MapManager";
 import ProvinceManager from "./ProvinceManager";
 import CountryManager from "./CountryManager";
-import WeightManager from "./WeightManager";
 import ProcessManager from "./ProcessManager";
 import CommonManager from "./CommonManager";
 
@@ -11,7 +10,6 @@ export default class Managers {
   static Map: MapManager = new MapManager()
   static File: FileManager = new FileManager()
   static Country: CountryManager = new CountryManager()
-  static Weight: WeightManager = new WeightManager()
   static Process: ProcessManager = new ProcessManager()
   static Common: CommonManager = new CommonManager()
 }

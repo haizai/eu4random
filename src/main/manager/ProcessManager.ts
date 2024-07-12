@@ -1,6 +1,10 @@
 import Util from "../../Util";
+import Global from "../Global";
+import ModDescriptionSyntax from "../Syntax/file/ModDescriptionSyntax";
 import { ProvinceRange } from "../types";
 import Managers from "./Managers";
+import path from "node:path"
+import fs from "node:fs/promises"
 
 interface CountryEntry {
   tag: string,
@@ -62,12 +66,12 @@ enum ConfigProvinceReligion {
 }
 
 const Config = {
-  Capital: ConfigCapital.Original,
+  Capital: ConfigCapital.CountryTechnologyGroup,
   CountryWeight: ConfigCountryWeight.Development,
-  StartCountry: ConfigStartCountry.Start,
+  StartCountry: ConfigStartCountry.HasCore,
   StartCountryPercent: 1,
   ProvinceWeight: {
-    Distance: ConfigProvinceDistance.None,
+    Distance: ConfigProvinceDistance.Distance,
     Culture: ConfigProvinceCulture.SameCultureGroup,
     Position: ConfigProvincePosition.SameSuperregion,
     Religion: ConfigProvinceReligion.SameReligionGroup,
@@ -134,37 +138,66 @@ class ProvinceWeight {
 
 export default class ProcessManager {
 
-  countryDir: {
+  //只需执行一次
+  async InitData() {
+    await Global.init();
+    await Managers.File.parseAllFile()
+    await Managers.Map.ReadProvinces();
+    Managers.Province.initData()
+    await Managers.Province.ReadDefinition()
+    await Managers.Province.ReadAdjacencies()
+    Managers.Province.fillColorIntDir();
+    await Managers.Map.fillAllPos()
+    Managers.Province.fillAdjacentProvince()
+    Managers.Province.calDataByFiles()
+    Managers.Common.initData()
+    Managers.Country.initData()
+  }
+  async DoIt() {
+    
+    // mod文件重置
+    await this.resetModProject();
+    // 获取开局国家和可选省份
+    this.handleStartCountry()
+    // 分配首都
+    this.handleCapital()
+    // 计算所有省份对每个国家的权重
+    this.handleProvinceWeight()
+    // 分配所有省份
+    this.handleAllProvince()
+    // 写入所有文件
+    await this.WriteAllFile()
+  }
+  private countryDir: {
     [tag: string]: CountryEntry,
   } = {
 
   }
-  selectableCountry :Set<string> = new Set() // 可选的国家
-  waitUseProvince :Set<number> = new Set()// 待选的省份
-  usedCountry:string[] = []
-  provinceWeight: {
+  private selectableCountry :Set<string> = new Set() // 可选的国家
+  private waitUseProvince :Set<number> = new Set()// 待选的省份
+  private usedCountry:string[] = []
+  private provinceWeight: {
     [province: number]: ProvinceWeight,
   } = {}
 
-  calCountryWeight(tag: string) {
+  private calCountryWeight(tag: string) {
     var config = Config.CountryWeight
     switch (config) {
       case ConfigCountryWeight.None:
         return 1
-        break;
       case ConfigCountryWeight.Random:
         return Math.random()
       case ConfigCountryWeight.Development:
-        return Managers.Country.getDevelopment(tag)
+        return Managers.Country.getDevelopment(tag) || 1
       case ConfigCountryWeight.OwnerCount:
-        return Managers.Country.getOwnersCount(tag)
+        return Managers.Country.getOwnersCount(tag) || 1
       default:
         break;
     }
     return 1
   }
 
-  calCapital() {
+  private handleCapital() {
     var config = Config.Capital
     if (config == ConfigCapital.Original) {
       Util.shuffleArray(Array.from(this.selectableCountry)).forEach(tag => {
@@ -298,7 +331,7 @@ export default class ProcessManager {
 
   }
 
-  calStartCountry() {
+  private handleStartCountry() {
 
     let config = Config.StartCountry
     let tags:Set<string> = new Set()
@@ -342,10 +375,19 @@ export default class ProcessManager {
 
 
   }
-  calProvinceWeight(tag:string, province:number) {
-    return this.calProvinceWeightDistance(tag, province) * this.calProvinceWeightCulture(tag, province) * this.calProvinceWeightReligion(tag, province) * this.calProvinceWeightPosition(tag, province)
+  private handleProvinceWeight() {
+    this.waitUseProvince.forEach(province => {
+      // 先重新洗牌再排序
+      let provinceWeight = new ProvinceWeight() 
+      this.provinceWeight[province] = provinceWeight
+      Array.from(this.selectableCountry).forEach(tag=>{
+        var weight = this.calProvinceWeightDistance(tag, province) * this.calProvinceWeightCulture(tag, province) * this.calProvinceWeightReligion(tag, province) * this.calProvinceWeightPosition(tag, province)
+        provinceWeight.addWeight(tag, weight)
+      })
+      provinceWeight.sort()
+    }) 
   }
-  calProvinceWeightDistance(tag:string, province:number) {
+  private calProvinceWeightDistance(tag:string, province:number) {
     switch (Config.ProvinceWeight.Distance) {
       case ConfigProvinceDistance.None:
         return 1;
@@ -358,7 +400,7 @@ export default class ProcessManager {
     }
     return 1
   }
-  calProvinceWeightCulture(tag:string, province:number) {
+  private calProvinceWeightCulture(tag:string, province:number) {
     switch (Config.ProvinceWeight.Culture) {
       case ConfigProvinceCulture.None:
         return 1;
@@ -373,7 +415,7 @@ export default class ProcessManager {
     }
     return 1
   }
-  calProvinceWeightReligion(tag:string, province:number) {
+  private calProvinceWeightReligion(tag:string, province:number) {
     switch (Config.ProvinceWeight.Religion) {
       case ConfigProvinceReligion.None:
         return 1;
@@ -388,7 +430,7 @@ export default class ProcessManager {
     }
     return 1
   }
-  calProvinceWeightPosition(tag:string, province:number) {
+  private calProvinceWeightPosition(tag:string, province:number) {
     let ret = 1
     switch (Config.ProvinceWeight.Position) {
       case ConfigProvincePosition.None:
@@ -407,28 +449,9 @@ export default class ProcessManager {
     }
     return 1
   }
-  async initData() {
-
-    this.calStartCountry()
-    this.calCapital()
-
-    
-
-
-    this.waitUseProvince.forEach(province => {
-      // 先重新洗牌再排序
-      let provinceWeight = new ProvinceWeight() 
-      this.provinceWeight[province] = provinceWeight
-      Array.from(this.selectableCountry).forEach(tag=>{
-        provinceWeight.addWeight(tag, 10000 / Managers.Province.calDistanceSquare(province,this.countryDir[tag].capital)**0.5 * this.countryDir[tag].weight)
-        // 10000 / Managers.Province.calDistanceSquare(province,this.countryDir[tag].capital)
-      })
-      provinceWeight.sort()
-    }) 
+  private handleAllProvince() {
 
     this.usedCountry = Array.from(this.selectableCountry)
-
-    
     var rank = 0
     while(this.usedCountry.length > 0 && rank < this.selectableCountry.size) {
 
@@ -482,17 +505,8 @@ export default class ProcessManager {
     provinces.forEach(province => {
       this.countryAddProvince(this.provinceWeight[province].findBiggestTag(),province)
     });
-
-    // do {
-    //   var tag = Util.randomFromArray(this.usedCountry)
-    //   let lands = this.getNowCountryAdjacentLands(tag)
-    //   if (lands.length == 0) {
-    //     this.usedCountry.splice(this.usedCountry.indexOf(tag), 1)
-    //   } else {
-    //     var index = Util.calMinIndex(lands.map(land=>Managers.Province.calDistanceSquare(land, this.countryDir[tag].capital)))
-    //     this.countryAddProvince(tag, lands[index])
-    //   }
-    // } while(this.usedCountry.length > 0)
+  }
+  private async WriteAllFile() {
 
     for(let tag in this.countryDir) {
       let entry = this.countryDir[tag]
@@ -506,6 +520,18 @@ export default class ProcessManager {
     for(let province of this.waitUseProvince) {
       await Managers.File.HistoryProvinces.setOwnerThenWriteFile(province.toString(), "{}")
     }
+  }
+  private async resetModProject() {
+    try {
+      await fs.access(path.join(Global.eu4DocumentsPath, "mod", Global.projectName))
+      await fs.rm(path.join(Global.eu4DocumentsPath, "mod", Global.projectName), {recursive: true})
+    } catch {
+      
+    } 
+    var mod = new ModDescriptionSyntax()
+    mod.initData()
+    await mod.writeFile(path.join(Global.eu4DocumentsPath, "mod"))
+    await mod.writeFile(Global.eu4DocumentsModProjectPath)
   }
   private countryAddProvince(country:string, province: number) {
     this.waitUseProvince.delete(province)
