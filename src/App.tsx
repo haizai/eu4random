@@ -8,7 +8,13 @@ function App() {
   const [count, setCount] = useState(0)
   return (
     <div className='App'>
-      <div className='logo-box'>
+      <button onClick={()=>window.ipcRenderer.invoke('init')}>
+        Init
+      </button>
+      <button onClick={()=>window.ipcRenderer.invoke('todo')}>
+        Todo
+      </button>
+      {/* <div className='logo-box'>
         <a href='https://github.com/electron-vite/electron-vite-react' target='_blank'>
           <img src={logoVite} className='logo vite' alt='Electron + Vite logo' />
           <img src={logoElectron} className='logo electron' alt='Electron + Vite logo' />
@@ -31,9 +37,9 @@ function App() {
       </p>
       <div className='flex-center'>
         Place static files into the<code>/public</code> folder <img style={{ width: '5em' }} src='./node.svg' alt='Node logo' />
-      </div>
+      </div> */}
 
-      <UpdateElectron />
+      {/* <UpdateElectron /> */}
     </div>
   )
 }

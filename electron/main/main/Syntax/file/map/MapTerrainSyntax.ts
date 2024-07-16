@@ -20,19 +20,19 @@ class MapTerrainParam extends SyntaxParam {
       supply_limit?: number,
       terrain_override?: number[],
     }
-  }
+  } = {}
   terrain: {
     [key: string] : {
       type: string,
       color: number[]
     }
-  }
+  } = {}
   tree: {
     [key: string] : {
       terrain: string,
       color: number[]
     }
-  }
+  } = {}
 
   TYPES = {
     categories:{

@@ -23,7 +23,7 @@ export abstract class SyntaxParam {
   //   CountryTag?: SyntaxParamType
   //   ProvinceId?: SyntaxParamType
   // }
-  TYPES : SyntaxParamKeyValueType
+  abstract TYPES : SyntaxParamKeyValueType
   abstract CreateInstance(): any
   Copy<T extends SyntaxParam>(): T {
     var ret = this.CreateInstance()

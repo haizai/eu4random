@@ -1,7 +1,7 @@
-import Util from "../Util";
-import Global from "../Global";
-import ModDescriptionSyntax from "../Syntax/file/ModDescriptionSyntax";
-import { ProvinceRange } from "../types";
+import Util from "../main/Util";
+import Global from "../main/Global";
+import ModDescriptionSyntax from "../main/Syntax/file/ModDescriptionSyntax";
+import { ProvinceRange } from "../main/types";
 import Managers from "./Managers";
 import path from "node:path"
 import fs from "node:fs/promises"
@@ -88,7 +88,7 @@ class ProvinceWeight {
     if(!this.map.has(weight)) {
       this.map.set(weight,[tag])
     } else {
-      this.map.get(weight).push(tag)
+      this.map.get(weight)?.push(tag)
     }
   }
   sort() {
@@ -96,7 +96,7 @@ class ProvinceWeight {
     for(let weight of keys) {
       this.data.push({
         weight,
-        tags: this.map.get(weight)
+        tags: this.map.get(weight)!
       })
     }
   }
@@ -219,9 +219,9 @@ export default class ProcessManager {
       });
       return
     }
-    let getProvinceFun:(province: number) => string
-    let getProvinceArrayFun:(province: number) => string[]
-    let getTagkey:(tag: string) => string
+    let getProvinceFun:(province: number) => string | undefined
+    let getProvinceArrayFun:(province: number) => string[] | undefined
+    let getTagkey:(tag: string) => string | undefined
     switch (config) {
       case ConfigCapital.CapitalContinent:
         getProvinceFun = Managers.Province.getContinent
@@ -251,16 +251,16 @@ export default class ProcessManager {
         getTagkey = tag => "World"
         break
       case ConfigCapital.CountryCultureGroup:
-        getProvinceFun = (province: number) => Managers.Common.getCultureGroupByCulture(Managers.File.HistoryProvinces.Dir[province].NowParam.culture)
-        getTagkey = tag => Managers.Common.getCultureGroupByCulture(Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture)
+        getProvinceFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.culture ? Managers.Common.getCultureGroupByCulture(Managers.File.HistoryProvinces.Dir[province].NowParam.culture) : undefined
+        getTagkey = tag => Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture ? Managers.Common.getCultureGroupByCulture(Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture) : undefined
         break
       case ConfigCapital.CountryReligion:
         getProvinceFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.religion
         getTagkey = tag => Managers.File.HistoryCountries.Dir[tag].NowParam.religion
         break
       case ConfigCapital.CountryReligionGroup:
-        getProvinceFun = (province: number) => Managers.Common.getReligionGroupByRegion(Managers.File.HistoryProvinces.Dir[province].NowParam.religion)
-        getTagkey = tag => Managers.Common.getReligionGroupByRegion(Managers.File.HistoryCountries.Dir[tag].NowParam.religion)
+        getProvinceFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.religion ? Managers.Common.getReligionGroupByRegion(Managers.File.HistoryProvinces.Dir[province].NowParam.religion) : undefined
+        getTagkey = tag => Managers.File.HistoryCountries.Dir[tag].NowParam.religion ? Managers.Common.getReligionGroupByRegion(Managers.File.HistoryCountries.Dir[tag].NowParam.religion) : undefined
         break
       case ConfigCapital.CountryTechnologyGroup:
         getProvinceArrayFun = (province: number) => Managers.File.HistoryProvinces.Dir[province].NowParam.discovered_by
@@ -287,7 +287,7 @@ export default class ProcessManager {
       }
       if (getProvinceArrayFun) {
         var keys = getProvinceArrayFun(land)
-        keys.forEach(key=>{
+        keys?.forEach(key=>{
           if (key) {
             if (!range[key]) {
               range[key] = []
@@ -305,13 +305,14 @@ export default class ProcessManager {
     Util.shuffleArray(Array.from(this.selectableCountry)).forEach(tag => {
       // 默认使用开局首都的范围
       if (!getTagkey) 
-        var key = getProvinceFun(Managers.File.HistoryCountries.Dir[tag].NowParam.capital)
+        var key = Managers.File.HistoryCountries.Dir[tag].NowParam.capital ? getProvinceFun(Managers.File.HistoryCountries.Dir[tag].NowParam.capital) : undefined
       else
         var key = getTagkey(tag)
+      var capital
       if (key && range[key]) {
-        var capital = Util.randomFromArray(range[key].filter(x=>this.waitUseProvince.has(x)))
+        capital = Util.randomFromArray(range[key].filter(x=>this.waitUseProvince.has(x)))
       } else if (range.Undefined && range.Undefined.length > 0) {
-        var capital = Util.randomFromArray(range.Undefined.filter(x=>this.waitUseProvince.has(x)))
+        capital = Util.randomFromArray(range.Undefined.filter(x=>this.waitUseProvince.has(x)))
       }
       if (capital && this.waitUseProvince.has(capital)) {
         this.countryDir[tag] = {
@@ -409,6 +410,9 @@ export default class ProcessManager {
       case ConfigProvinceCulture.SameCultureGroup:
         let primary_culture = Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture
         let proCulture = Managers.File.HistoryProvinces.Dir[province].NowParam.culture
+        if (!primary_culture || !proCulture) {
+          return 1
+        }
         if (primary_culture == proCulture)
           return 4
         return Managers.Common.getCultureGroupByCulture(primary_culture) == Managers.Common.getCultureGroupByCulture(proCulture) ? 2 : 1
@@ -424,6 +428,9 @@ export default class ProcessManager {
       case ConfigProvinceReligion.SameReligionGroup:
         let tagReligion = Managers.File.HistoryCountries.Dir[tag].NowParam.religion
         let proReligon = Managers.File.HistoryProvinces.Dir[province].NowParam.religion
+        if (!tagReligion || !proReligon) {
+          return 1
+        }
         if (tagReligion == proReligon)
           return 4
         return Managers.Common.getReligionGroupByRegion(tagReligion) == Managers.Common.getReligionGroupByRegion(proReligon) ? 2 : 1

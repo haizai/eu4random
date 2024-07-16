@@ -1,24 +1,24 @@
 import Util from "./Util"
 
 class BMP {
-  buffer:Buffer
-  bfType:number // 0-1 表示文件类型
-  bfSize:number // 2-5 表示文件的大小
-  bfReserved1:number // 6-7
-  bfReserved2:number // 8-9
-  bfOffBits:number // a-d 4字节的偏移，表示从文件头到位图数据的偏移
+  buffer!:Buffer
+  bfType!:number // 0-1 表示文件类型
+  bfSize!:number // 2-5 表示文件的大小
+  bfReserved1!:number // 6-7
+  bfReserved2!:number // 8-9
+  bfOffBits!:number // a-d 4字节的偏移，表示从文件头到位图数据的偏移
 
-  biSize:number // 0e-11 4字节的偏移，表示从文件头到位图数据的偏移
-  biWidth:number // 12-15 宽
-  biHeight:number // 16-19
-  biPlanes:number //1a-1b
-  biBitCount:number //1c-1d
-  biCompression: number//1e-21
-  biSizeImages:number//22-25
-  biXPelsPerMeter:number//26-29
-  biYPelsPerMeter:number//2a-2d
-  biClrUsed:number//2e-31
-  biClrImportant:number//32-35
+  biSize!:number // 0e-11 4字节的偏移，表示从文件头到位图数据的偏移
+  biWidth!:number // 12-15 宽
+  biHeight!:number // 16-19
+  biPlanes!:number //1a-1b
+  biBitCount!:number //1c-1d
+  biCompression!: number//1e-21
+  biSizeImages!:number//22-25
+  biXPelsPerMeter!:number//26-29
+  biYPelsPerMeter!:number//2a-2d
+  biClrUsed!:number//2e-31
+  biClrImportant!:number//32-35
 
 
 

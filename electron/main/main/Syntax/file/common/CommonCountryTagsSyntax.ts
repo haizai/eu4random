@@ -4,7 +4,7 @@ import { SyntaxParam } from "../../SyntaxParam"
 
 class CommonCountrytagsParam extends SyntaxParam {
   CreateInstance = () => new CommonCountrytagsParam()
-  ANY: {[key: string]: string}
+  ANY: {[key: string]: string} = {}
   TYPES = {
     ANY: SyntaxParamSimpleType.string
   }

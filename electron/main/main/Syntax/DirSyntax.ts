@@ -4,8 +4,8 @@ import Global from "../Global"
 import {Syntax, SyntaxItem} from "./Syntax"
 import FileSyntax from "./FileSyntax"
 
-class DirSyntax {
-  protected relativePath:string[]
+abstract class DirSyntax {
+  abstract relativePath:string[]
   protected dirData: {
     [fileName: string] : FileSyntax
   } = {}

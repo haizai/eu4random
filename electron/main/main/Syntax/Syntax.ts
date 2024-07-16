@@ -1,7 +1,7 @@
 
 interface SyntaxKeyValue {
-  key?: string;
-  value?: SyntaxValue
+  key: string;
+  value: SyntaxValue
 }
 type SyntaxItem = SyntaxKeyValue | string
 type SyntaxValue = SyntaxItem[] | SyntaxItem | null
@@ -172,18 +172,17 @@ class Syntax {
   //   }
   //   return skv
   // }
-  private parseItem(): SyntaxItem {
-    var skv:SyntaxKeyValue = {}
-    skv.key = this.parseKey()
-    if (skv.key === null) {
+  private parseItem(): SyntaxItem | null {
+    var key = this.parseKey()
+    if (key === null) {
       return this.parseSimpleValue()
     }  
-    skv.value = this.parseValue()
-    if (skv.value === null) {
+    var value = this.parseValue()
+    if (value === null) {
       throw new Error("key = null ???")
       return null
     }
-    return skv
+    return {key, value}
   }
   private parseSimpleValue(): null | string {
     let m = this.match(Syntax.simpleValueSpaceReg)
@@ -220,8 +219,11 @@ class Syntax {
 }
 
 export {
-  Syntax,
+  Syntax
+};
+export type {
   SyntaxKeyValue,
   SyntaxItem,
-  SyntaxValue,
-} 
+  SyntaxValue
+};
+ 

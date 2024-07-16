@@ -4,7 +4,7 @@ import { SyntaxParam } from "../../SyntaxParam"
 
 class MapSuperregionParam extends SyntaxParam {
   CreateInstance = () => new MapSuperregionParam()
-  ANY: {[superregion: string]: string[]}
+  ANY: {[superregion: string]: string[]} = {}
   TYPES = {
     ANY: [SyntaxParamSimpleType.string]
   }

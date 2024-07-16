@@ -1,5 +1,5 @@
 import Global from "./Global";
-import Managers from "./manager/Managers";
+import Managers from "../manager/Managers";
 
 
 async function Todo() {

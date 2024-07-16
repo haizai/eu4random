@@ -4,12 +4,11 @@ import Global from "../Global"
 import {Syntax} from "./Syntax"
 
 class FileSyntax extends Syntax {
-  constructor(relativePath:string[] = null) {
+  constructor(relativePath:string[] = []) {
     super()
-    if (relativePath)
-      this.relativePath = relativePath;
+    this.relativePath = relativePath;
   }
-  protected relativePath:string[]
+  protected relativePath:string[] = []
   async parseFile() {
     var filePath = path.join(Global.eu4GamePath, ...this.relativePath)
     var fileStr = await fs.readFile(filePath,{encoding:"latin1"})

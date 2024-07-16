@@ -11,7 +11,7 @@ class MapPositionsParam extends SyntaxParam {
     position: [number,number,number,number,number,number,number,number,number,number,number,number,number,number],
     rotation: [number,number,number,number,number,number,number],
     height: [number,number,number,number,number,number,number],
-  }}
+  }} = {}
   TYPES = {
     ANY: {
       position: [SyntaxParamSimpleType.int],

@@ -6,7 +6,7 @@ import { SyntaxParam } from "../../SyntaxParam"
 
 class MapAreaSyntaxParam extends SyntaxParam {
   CreateInstance = () => new MapAreaSyntaxParam()
-  ANY: {[area: string]: number[]}
+  ANY: {[area: string]: number[]} = {}
   TYPES = {
     ANY: [SyntaxParamSimpleType.int]
   }

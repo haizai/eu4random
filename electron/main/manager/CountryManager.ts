@@ -1,4 +1,4 @@
-import Util from "../Util";
+import Util from "../main/Util";
 import Managers from "./Managers";
 
 interface CountryItemData {

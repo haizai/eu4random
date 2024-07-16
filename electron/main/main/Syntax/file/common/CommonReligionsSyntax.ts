@@ -17,7 +17,7 @@ class CommonReligionsParam extends SyntaxParam {
     ANY?: {
 
     }
-  }}
+  }} = {}
 
   TYPES = {
     

@@ -5,12 +5,12 @@ import { SyntaxParam } from "../../SyntaxParam"
 
 class MapDefaultParam extends SyntaxParam {
   CreateInstance = () => new MapDefaultParam()
-  width: number
-  height: number
-  max_provinces: number
-  sea_starts: number[]
-  only_used_for_random: number[]
-  lakes: number[]
+  width!: number
+  height!: number
+  max_provinces!: number
+  sea_starts!: number[]
+  only_used_for_random!: number[]
+  lakes!: number[]
 
 
   TYPES = {

@@ -5,7 +5,7 @@ import { SyntaxParam } from "../../SyntaxParam"
 
 class MapClimateParam extends SyntaxParam {
   CreateInstance = () => new MapClimateParam()
-  ANY: {[key: string]: [number]}
+  ANY: {[key: string]: [number]} = {}
   TYPES = {
     ANY: [SyntaxParamSimpleType.int]
   }

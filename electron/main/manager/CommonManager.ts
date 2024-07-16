@@ -3,7 +3,7 @@ import Managers from "./Managers";
 export default class CommonManager {
 
   getCultureGroupByCulture = (culture:string) => this.cultureToGroupDir[culture]
-  getReligionGroupByRegion = (culture:string) => this.religionToGroupDir[culture]
+  getReligionGroupByRegion = (religion:string) => this.religionToGroupDir[religion]
   
   private cultureToGroupDir:{[culture:string]: string} = {}
   private religionToGroupDir:{[culture:string]: string} = {}

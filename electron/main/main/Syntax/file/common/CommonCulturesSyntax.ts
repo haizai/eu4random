@@ -19,7 +19,7 @@ class CommonCulturesParam extends SyntaxParam {
         dynasty_names: [SyntaxParamSimpleType.string],
       }
     }
-  }}
+  }} = {}
 
   TYPES = {
     

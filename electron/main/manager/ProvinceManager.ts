@@ -1,10 +1,10 @@
 import path from "node:path"
 import fs from "node:fs/promises"
-import Global from "../Global";
-import Util from "../Util";
-import BMP from "../bmp";
+import Global from "../main/Global";
+import Util from "../main/Util";
+import BMP from "../main/bmp";
 import Managers from "./Managers";
-import { ProvinceRange } from "../types";
+import { ProvinceRange } from "../main/types";
 
 interface ProvinceData {
   [id:string]: ProvinceItem
@@ -165,9 +165,9 @@ class ProvinceManager {
     var defArr = str.split("\n")
     
     for(var i = 1; i < defArr.length; i++) {
-      var [definition, id] = this.parseDefinition(defArr[i]) 
-      if (definition != null) {
-        this.data[id].definition = definition
+      var definition = this.parseDefinition(defArr[i]) 
+      if (definition != null ) {
+        this.data[definition[1]].definition = definition[0]
       }
     }
   }
@@ -213,7 +213,7 @@ class ProvinceManager {
   fillColorIntDir() {
     for(var id in this.data) {
       var def = this.data[id].definition
-      var rgb = Util.calColorInt(def.red, def.green, def.blue)
+      var rgb = Util.calColorInt(def!.red, def!.green, def!.blue)
       this.colorIntDir[rgb] = parseInt(id)
     }
   }
@@ -238,7 +238,7 @@ class ProvinceManager {
   //   }
   //   return [pos, id]
   // }
-  parseDefinition(defStr: string): [Definition, number] {
+  parseDefinition(defStr: string): [Definition, number] | null {
     if (!defStr) {
       return null
     }
@@ -257,7 +257,7 @@ class ProvinceManager {
     }
     return [pos, id]
   }
-  parseAdjacency(str: string): Adjacency {
+  parseAdjacency(str: string): Adjacency | null {
     if (!str) {
       return null
     }

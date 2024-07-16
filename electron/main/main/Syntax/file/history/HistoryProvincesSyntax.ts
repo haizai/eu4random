@@ -51,7 +51,7 @@ class HistoryProvincesSyntax extends HistroySyntax<HistoryProvinceParam> {
   'relativePath' = ["history", "provinces"]
   protected createParam = () => new HistoryProvinceParam()
   protected getDirKeyByFileName(filename: string): string{
-    return filename.match(/^\s*\d+/)[0]
+    return filename.match(/^\s*\d+/)![0]
   }
   async removeOwnerThenWriteFile(id:string) {
     var fileName = this.Dir[id]?.FileName

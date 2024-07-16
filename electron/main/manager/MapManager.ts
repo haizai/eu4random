@@ -1,14 +1,14 @@
-import Global from "../Global"
+import Global from "../main/Global"
 import path from "node:path"
 import fs from "node:fs/promises"
-import BMP from "../bmp"
-import Util from "../Util"
+import BMP from "../main/bmp"
+import Util from "../main/Util"
 import Managers from "./Managers"
 
 class MapManager {
-  width:number
-  height:number
-  private bmp:BMP
+  width!:number
+  height!:number
+  private bmp!:BMP
   async ReadProvinces() {
     const provincesBmp = path.join(Global.eu4GamePath, "map", "provinces.bmp")
     var buffer = await fs.readFile(provincesBmp)

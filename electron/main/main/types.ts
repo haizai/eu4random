@@ -9,7 +9,7 @@ export enum SyntaxParamSimpleType {
 export type SyntaxParamArrayType = SyntaxParamType[]
 export type SyntaxParamKeyValueType = {
   ANY?: SyntaxParamType,
-  [key: string] : SyntaxParamType
+  [key: string] : SyntaxParamType | undefined
 }
 
 export type SyntaxParamType = SyntaxParamSimpleType | SyntaxParamArrayType | SyntaxParamKeyValueType
@@ -18,5 +18,5 @@ export type SyntaxParamType = SyntaxParamSimpleType | SyntaxParamArrayType | Syn
 // 省份范围
 export type ProvinceRange = {
   Undefined?: number[]
-  [key:string]:number[]
+  [key:string]:number[] | undefined
 } 
