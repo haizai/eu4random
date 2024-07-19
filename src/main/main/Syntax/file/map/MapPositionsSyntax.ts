@@ -1,22 +1,39 @@
-import Util from "../../../Util";
-import { SyntaxParamSimpleType } from "../../../types";
-import { FileParamSyntax } from "../../FileParamSyntax";
-import FileSyntax from "../../FileSyntax"
-import { SyntaxKeyValue } from "../../Syntax";
-import { SyntaxParam } from "../../SyntaxParam";
+import Util from '../../../Util'
+import { SyntaxParamSimpleType } from '../../../types'
+import { FileParamSyntax } from '../../FileParamSyntax'
+import FileSyntax from '../../FileSyntax'
+import { SyntaxKeyValue } from '../../Syntax'
+import { SyntaxParam } from '../../SyntaxParam'
 
 class MapPositionsParam extends SyntaxParam {
   CreateInstance = () => new MapPositionsParam()
-  ANY: {[key: string]: {
-    position: [number,number,number,number,number,number,number,number,number,number,number,number,number,number],
-    rotation: [number,number,number,number,number,number,number],
-    height: [number,number,number,number,number,number,number],
-  }} = {}
+  ANY: {
+    [key: string]: {
+      position: [
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number,
+        number
+      ]
+      rotation: [number, number, number, number, number, number, number]
+      height: [number, number, number, number, number, number, number]
+    }
+  } = {}
   TYPES = {
     ANY: {
       position: [SyntaxParamSimpleType.int],
       rotation: [SyntaxParamSimpleType.float],
-      height: [SyntaxParamSimpleType.int],
+      height: [SyntaxParamSimpleType.int]
     }
   }
 }
@@ -32,9 +49,9 @@ class MapPositionsParam extends SyntaxParam {
 // }
 
 class MapPositionsSyntax extends FileParamSyntax<MapPositionsParam> {
-  param: MapPositionsParam = new MapPositionsParam();
+  param: MapPositionsParam = new MapPositionsParam()
   // private Map:MapPositionsData = {}
-  relativePath = ["map", "positions.txt"]
+  relativePath = ['map', 'positions.txt']
   // handleData(): void {
   //   this.data.forEach((element:SyntaxKeyValue) => {
   //     var position = Util.SyntaxArrayFindOne(element.value, "position") as string[]
@@ -47,7 +64,7 @@ class MapPositionsSyntax extends FileParamSyntax<MapPositionsParam> {
   //     }
   //   });
   // }
-  GetCityPos(id:number):[number,number] {
+  GetCityPos(id: number): [number, number] {
     return [this.param.ANY[id].position[0], this.param.ANY[id].position[1]]
   }
   GetProvinceIds() {

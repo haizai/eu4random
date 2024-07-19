@@ -4,19 +4,18 @@ export enum SyntaxParamSimpleType {
   boolean,
   number,
   int,
-  float,
+  float
 }
 export type SyntaxParamArrayType = SyntaxParamType[]
 export type SyntaxParamKeyValueType = {
-  ANY?: SyntaxParamType,
-  [key: string] : SyntaxParamType | undefined
+  ANY?: SyntaxParamType
+  [key: string]: SyntaxParamType | undefined
 }
 
 export type SyntaxParamType = SyntaxParamSimpleType | SyntaxParamArrayType | SyntaxParamKeyValueType
 
-
 // 省份范围
 export type ProvinceRange = {
   Undefined?: number[]
-  [key:string]:number[] | undefined
-} 
+  [key: string]: number[] | undefined
+}

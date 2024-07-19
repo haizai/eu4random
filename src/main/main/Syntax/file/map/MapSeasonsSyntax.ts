@@ -1,8 +1,6 @@
-import FileSyntax from "../../FileSyntax"
-
+import FileSyntax from '../../FileSyntax'
 
 export default class MapSeasonsSyntax extends FileSyntax {
-  relativePath = ["map", "seasons.txt"]
-  handleData(): void {
-  }
+  relativePath = ['map', 'seasons.txt']
+  handleData(): void {}
 }

@@ -1,9 +1,9 @@
-import FileManager from "./FileManager";
-import MapManager from "./MapManager";
-import ProvinceManager from "./ProvinceManager";
-import CountryManager from "./CountryManager";
-import ProcessManager from "./ProcessManager";
-import CommonManager from "./CommonManager";
+import FileManager from './FileManager'
+import MapManager from './MapManager'
+import ProvinceManager from './ProvinceManager'
+import CountryManager from './CountryManager'
+import ProcessManager from './ProcessManager'
+import CommonManager from './CommonManager'
 
 export default class Managers {
   static Province: ProvinceManager = new ProvinceManager()

@@ -1,18 +1,18 @@
-import CommonCountrytagsSyntax from "../main/Syntax/file/common/CommonCountryTagsSyntax"
-import CommonCulturesSyntax from "../main/Syntax/file/common/CommonCulturesSyntax"
-import CommonReligionsSyntax from "../main/Syntax/file/common/CommonReligionsSyntax"
-import HistoryCountriesSyntax from "../main/Syntax/file/history/HistoryCountriesSyntax"
-import HistoryProvincesSyntax from "../main/Syntax/file/history/HistoryProvincesSyntax"
-import MapAmbientObjectSyntax from "../main/Syntax/file/map/MapAmbientObjectSyntax"
-import MapAreaSyntax from "../main/Syntax/file/map/MapAreaSyntax"
-import MapClimateSyntax from "../main/Syntax/file/map/MapClimateSyntax"
-import MapContinentSyntax from "../main/Syntax/file/map/MapContinentSyntax"
-import MapDefaultSyntax from "../main/Syntax/file/map/MapDefaultSyntax"
-import MapPositionsSyntax from "../main/Syntax/file/map/MapPositionsSyntax"
-import MapRegionSyntax from "../main/Syntax/file/map/MapRegionSyntax"
-import MapSeasonsSyntax from "../main/Syntax/file/map/MapSeasonsSyntax"
-import MapSuperregionSyntax from "../main/Syntax/file/map/MapSuperregionSyntax"
-import MapTerrainSyntax from "../main/Syntax/file/map/MapTerrainSyntax"
+import CommonCountrytagsSyntax from '../main/Syntax/file/common/CommonCountryTagsSyntax'
+import CommonCulturesSyntax from '../main/Syntax/file/common/CommonCulturesSyntax'
+import CommonReligionsSyntax from '../main/Syntax/file/common/CommonReligionsSyntax'
+import HistoryCountriesSyntax from '../main/Syntax/file/history/HistoryCountriesSyntax'
+import HistoryProvincesSyntax from '../main/Syntax/file/history/HistoryProvincesSyntax'
+import MapAmbientObjectSyntax from '../main/Syntax/file/map/MapAmbientObjectSyntax'
+import MapAreaSyntax from '../main/Syntax/file/map/MapAreaSyntax'
+import MapClimateSyntax from '../main/Syntax/file/map/MapClimateSyntax'
+import MapContinentSyntax from '../main/Syntax/file/map/MapContinentSyntax'
+import MapDefaultSyntax from '../main/Syntax/file/map/MapDefaultSyntax'
+import MapPositionsSyntax from '../main/Syntax/file/map/MapPositionsSyntax'
+import MapRegionSyntax from '../main/Syntax/file/map/MapRegionSyntax'
+import MapSeasonsSyntax from '../main/Syntax/file/map/MapSeasonsSyntax'
+import MapSuperregionSyntax from '../main/Syntax/file/map/MapSuperregionSyntax'
+import MapTerrainSyntax from '../main/Syntax/file/map/MapTerrainSyntax'
 
 class FileManager {
   MapAmbientObject: MapAmbientObjectSyntax = new MapAmbientObjectSyntax()
@@ -28,11 +28,11 @@ class FileManager {
 
   HistoryProvinces: HistoryProvincesSyntax = new HistoryProvincesSyntax()
   HistoryCountries: HistoryCountriesSyntax = new HistoryCountriesSyntax()
-  
+
   CommonCountrytags: CommonCountrytagsSyntax = new CommonCountrytagsSyntax()
   CommonCultures: CommonCulturesSyntax = new CommonCulturesSyntax()
   CommonReligions: CommonReligionsSyntax = new CommonReligionsSyntax()
-  
+
   async parseAllFile() {
     await this.MapAmbientObject.parseFile()
     await this.MapArea.parseFile()
@@ -47,12 +47,10 @@ class FileManager {
 
     await this.HistoryProvinces.parseFile()
     await this.HistoryCountries.parseFile()
-    
+
     await this.CommonCountrytags.parseFile()
     await this.CommonCultures.parseFile()
     await this.CommonReligions.parseFile()
-
-
   }
 }
 export default FileManager
