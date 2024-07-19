@@ -1,8 +1,5 @@
-import Util from '../../../Util'
 import { SyntaxParamSimpleType } from '../../../types'
 import { FileParamSyntax } from '../../FileParamSyntax'
-import FileSyntax from '../../FileSyntax'
-import { SyntaxKeyValue } from '../../Syntax'
 import { SyntaxParam } from '../../SyntaxParam'
 
 class MapPositionsParam extends SyntaxParam {

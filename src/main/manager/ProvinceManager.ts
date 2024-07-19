@@ -2,9 +2,7 @@ import path from 'node:path'
 import fs from 'node:fs/promises'
 import Global from '../main/Global'
 import Util from '../main/Util'
-import BMP from '../main/bmp'
 import Managers from './Managers'
-import { ProvinceRange } from '../main/types'
 
 interface ProvinceData {
   [id: string]: ProvinceItem

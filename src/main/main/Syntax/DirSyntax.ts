@@ -1,7 +1,6 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
 import Global from '../Global'
-import { Syntax, SyntaxItem } from './Syntax'
 import FileSyntax from './FileSyntax'
 
 abstract class DirSyntax {

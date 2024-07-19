@@ -1,5 +1,3 @@
-import Util from './Util'
-
 class BMP {
   buffer!: Buffer
   bfType!: number // 0-1 表示文件类型

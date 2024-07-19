@@ -245,8 +245,8 @@ export default class ProcessManager {
         getTagkey = (tag) => Managers.File.HistoryCountries.Dir[tag].NowParam.primary_culture
         break
       case ConfigCapital.World:
-        getProvinceFun = (province: number) => 'World'
-        getTagkey = (tag) => 'World'
+        getProvinceFun = () => 'World'
+        getTagkey = () => 'World'
         break
       case ConfigCapital.CountryCultureGroup:
         getProvinceFun = (province: number) =>
@@ -331,7 +331,7 @@ export default class ProcessManager {
       else var key = getTagkey(tag)
       let capital
       if (key && range[key]) {
-        capital = Util.randomFromArray(range[key].filter((x) => this.waitUseProvince.has(x)))
+        capital = Util.randomFromArray(range[key]!.filter((x) => this.waitUseProvince.has(x)))
       } else if (range.Undefined && range.Undefined.length > 0) {
         capital = Util.randomFromArray(range.Undefined.filter((x) => this.waitUseProvince.has(x)))
       }
@@ -574,7 +574,8 @@ export default class ProcessManager {
 
     // 对于所有未分配的省份, 直接分配给权重最大的
     provinces.forEach((province) => {
-      this.countryAddProvince(this.provinceWeight[province].findBiggestTag(), province)
+      const tag = this.provinceWeight[province].findBiggestTag()
+      if (tag) this.countryAddProvince(tag, province)
     })
   }
   private async WriteAllFile() {

@@ -1,4 +1,3 @@
-import Global from './Global'
 import Managers from '../manager/Managers'
 
 async function Todo() {
@@ -8,3 +7,4 @@ async function Todo() {
   await Managers.Process.DoIt()
   console.log('End!!!!')
 }
+Todo()

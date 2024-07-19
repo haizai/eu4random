@@ -56,7 +56,6 @@ export abstract class SyntaxParam {
     }
   }
   SetSyntaxData(data: SyntaxItem[]) {
-    const anyThis = this as any
     this.ObjSetKeyValueItems(this as any, data, this.TYPES)
   }
   // [{key: k1, value: v1}, {key: k2, value: v2} ...] => {k1: v1, k2: v2}
@@ -120,7 +119,7 @@ export abstract class SyntaxParam {
       return undefined
     }
   }
-  private GetSyntaxValueSimple(val: string, type: SyntaxParamSimpleType) {
+  private GetSyntaxValueSimple(val: string, type: SyntaxParamSimpleType): any {
     switch (type) {
       case SyntaxParamSimpleType.string:
         return val

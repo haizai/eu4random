@@ -1,4 +1,4 @@
-import { SyntaxItem, SyntaxKeyValue, SyntaxValue } from './Syntax/Syntax'
+import { SyntaxValue } from './Syntax/Syntax'
 
 export default class Util {
   static calColorInt(r: number, g: number, b: number) {
