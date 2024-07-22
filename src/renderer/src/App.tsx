@@ -3,7 +3,11 @@ import electronLogo from './assets/electron.svg'
 
 function App(): JSX.Element {
   const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
-  const init = (): void => window.electron.ipcRenderer.send('init')
+  const init = async () => {
+    await window.api.init()
+    console.log("apiInit")
+  }
+
 
   return (
     <>

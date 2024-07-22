@@ -1,7 +1,14 @@
-import { ipcMain } from 'electron'
+import { ipcMain, ipcRenderer } from 'electron'
 import Managers from './manager/Managers'
 
-ipcMain.on('init', () => {
-  console.log('init')
-  Managers.Process.InitData()
-})
+// ipcMain.on('init', () => {
+//   console.log('init')
+// ipcRenderer.invoke("log", "initEnd")
+  
+// })
+
+export default function() {
+  ipcMain.handle("logic:init", async () =>{
+    console.log('init')
+  })
+}

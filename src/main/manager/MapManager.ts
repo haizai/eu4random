@@ -1,8 +1,8 @@
-import Global from '../main/Global'
+import Global from '../logic/Global'
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import BMP from '../main/bmp'
-import Util from '../main/Util'
+import BMP from '../logic/bmp'
+import Util from '../logic/Util'
 import Managers from './Managers'
 
 class MapManager {

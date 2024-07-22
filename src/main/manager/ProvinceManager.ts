@@ -1,7 +1,7 @@
 import path from 'node:path'
 import fs from 'node:fs/promises'
-import Global from '../main/Global'
-import Util from '../main/Util'
+import Global from '../logic/Global'
+import Util from '../logic/Util'
 import Managers from './Managers'
 
 interface ProvinceData {
