@@ -33,4 +33,7 @@ export default class Global {
       }
     } catch {}
   }
+  static getDefaultDocuments() {
+    return path.join(os.homedir(),'Documents')
+  }
 }

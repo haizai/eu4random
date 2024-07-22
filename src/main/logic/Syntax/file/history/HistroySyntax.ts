@@ -19,8 +19,8 @@ export interface HistoryDir<T extends SyntaxParam> {
 
 export abstract class HistroySyntax<T extends SyntaxParam> extends DirSyntax {
   Dir: HistoryDir<T> = {}
-  async handleData() {
-    for (const fileName in this.dirData) {
+  async handleData(fileName) {
+    // for (const fileName in this.dirData) {
       const syntax = this.dirData[fileName]
       const obj: HistoryObj<T> = {
         FileName: fileName,
@@ -49,7 +49,7 @@ export abstract class HistroySyntax<T extends SyntaxParam> extends DirSyntax {
         return t1T - t2T
       })
       obj.NowParam = this.calTimeParam(obj, '1444.11.11')
-    }
+    // }
   }
   calTimeParam(obj: HistoryObj<T>, time: string): T {
     const ret = obj.BaseParam.Copy<T>()

@@ -31,6 +31,7 @@ export default class CountryManager {
   }
 
   initData() {
+    Managers.Proxy.showMessage(`计算国家`)
     for (const provinceId in Managers.File.HistoryProvinces.Dir) {
       const data = Managers.File.HistoryProvinces.Dir[provinceId]
       if (data && data.NowParam.owner) {

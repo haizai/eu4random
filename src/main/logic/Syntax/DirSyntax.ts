@@ -15,10 +15,10 @@ abstract class DirSyntax {
       const fileSyntax = new FileSyntax(this.relativePath.concat(filePath))
       this.dirData[filePath] = fileSyntax
       await fileSyntax.parseFile()
+      await this.handleData(filePath)
     }
-    await this.handleData()
   }
-  protected async handleData() {}
+  abstract handleData(name: string): Promise<unknown>
   async writeFiles() {
     for (const name in this.dirData) {
       await this.writeFile(name)

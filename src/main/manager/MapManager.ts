@@ -10,6 +10,7 @@ class MapManager {
   height!: number
   private bmp!: BMP
   async ReadProvinces() {
+    Managers.Proxy.showMessage(`解析文件 provinces.bmp`)
     const provincesBmp = path.join(Global.eu4GamePath, 'map', 'provinces.bmp')
     const buffer = await fs.readFile(provincesBmp)
     this.bmp = new BMP()
@@ -19,6 +20,7 @@ class MapManager {
   }
 
   fillAllPos() {
+    Managers.Proxy.showMessage(`计算地图位置`)
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++) {
         const posInt = this.ToPosInt(x, y)

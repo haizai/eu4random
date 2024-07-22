@@ -96,6 +96,7 @@ class ProvinceManager {
   // copySuperregionRange = ():ProvinceRange => JSON.parse(JSON.stringify(this.superregionRange))
 
   calDataByFiles() {
+    Managers.Proxy.showMessage(`计算地图区域`)
     for (var continent in Managers.File.MapContinent.param.ANY) {
       var provinces = Managers.File.MapContinent.param.ANY[continent]
       provinces.forEach((province) => (this.data[province].continent = continent))
@@ -164,6 +165,7 @@ class ProvinceManager {
     }
   }
   async ReadDefinition() {
+    Managers.Proxy.showMessage(`解析文件 definition.csv`)
     const definitionScv = path.join(Global.eu4GamePath, 'map', 'definition.csv')
     const str = await fs.readFile(definitionScv, { encoding: 'latin1' })
     const defArr = str.split('\n')
@@ -176,6 +178,7 @@ class ProvinceManager {
     }
   }
   async ReadAdjacencies() {
+    Managers.Proxy.showMessage(`解析文件 adjacencies.csv`)
     const adjacenciesScv = path.join(Global.eu4GamePath, 'map', 'adjacencies.csv')
     const str = await fs.readFile(adjacenciesScv, { encoding: 'latin1' })
     const arr = str.split('\n')
@@ -195,6 +198,7 @@ class ProvinceManager {
     }
   }
   fillAdjacentProvince() {
+    Managers.Proxy.showMessage(`计算相邻省份`)
     for (const id in this.data) {
       const provinceData = this.data[id]
       provinceData.allPos.forEach((posInt) => {
@@ -215,6 +219,7 @@ class ProvinceManager {
     this.data[this.colorIntDir[colorInt]].allPos.push(posInt)
   }
   fillColorIntDir() {
+    Managers.Proxy.showMessage(`计算地图颜色`)
     for (const id in this.data) {
       const def = this.data[id].definition
       const rgb = Util.calColorInt(def!.red, def!.green, def!.blue)

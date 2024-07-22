@@ -2,7 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import proxy from './proxy'
+import Managers from './manager/Managers'
 
 function createWindow() {
   // Create the browser window.
@@ -35,7 +35,7 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
   
-  proxy(mainWindow)
+  Managers.Proxy.init(mainWindow)
 }
 
 // This method will be called when Electron has finished

@@ -138,6 +138,7 @@ class ProvinceWeight {
 export default class ProcessManager {
   //只需执行一次
   async InitData() {
+    Managers.Proxy.showMessage(`开始初始化`)
     await Global.init()
     await Managers.File.parseAllFile()
     await Managers.Map.ReadProvinces()
@@ -145,11 +146,12 @@ export default class ProcessManager {
     await Managers.Province.ReadDefinition()
     await Managers.Province.ReadAdjacencies()
     Managers.Province.fillColorIntDir()
-    await Managers.Map.fillAllPos()
+    Managers.Map.fillAllPos()
     Managers.Province.fillAdjacentProvince()
     Managers.Province.calDataByFiles()
     Managers.Common.initData()
     Managers.Country.initData()
+    Managers.Proxy.showMessage(`完成初始化`)
   }
   async DoIt() {
     // mod文件重置

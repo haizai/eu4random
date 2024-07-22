@@ -4,6 +4,7 @@ import ProvinceManager from './ProvinceManager'
 import CountryManager from './CountryManager'
 import ProcessManager from './ProcessManager'
 import CommonManager from './CommonManager'
+import ProxyManager from './ProxyManager'
 
 export default class Managers {
   static Province: ProvinceManager = new ProvinceManager()
@@ -12,4 +13,5 @@ export default class Managers {
   static Country: CountryManager = new CountryManager()
   static Process: ProcessManager = new ProcessManager()
   static Common: CommonManager = new CommonManager()
+  static Proxy: ProxyManager = new ProxyManager()
 }
