@@ -139,7 +139,7 @@ export default class ProcessManager {
   //只需执行一次
   async InitData() {
     Managers.Proxy.showMessage(`开始初始化`)
-    await Global.init()
+    // await Global.init()
     await Managers.File.parseAllFile()
     await Managers.Map.ReadProvinces()
     Managers.Province.initData()

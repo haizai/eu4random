@@ -7,8 +7,16 @@ export default class ProxyManager {
   browser!:BrowserWindow
   init(browser:BrowserWindow) {
     this.browser = browser
-    ipcMain.handle("init", async () =>{
-      await Managers.Process.InitData()
+    ipcMain.handle("init", async (_, documentsPath: string, gamePath: string) =>{
+      Global.init(documentsPath,gamePath);
+      try {
+        await Managers.Process.InitData()
+      }
+      catch (error: any){
+        this.showError(error?.message || error.toString())
+        return false
+      }
+      return true
     })
     ipcMain.handle("selectDocumentsPath", async (_, defaultPath: string) => {
       if (!defaultPath) {
@@ -45,5 +53,8 @@ export default class ProxyManager {
   }
   showMessage(message:string) {
     this.browser.webContents.send("showMessage", message)
+  }
+  showError(error:string) {
+    this.browser.webContents.send("showError", error)
   }
 }

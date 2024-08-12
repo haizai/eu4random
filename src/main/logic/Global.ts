@@ -14,24 +14,31 @@ export default class Global {
   static projectName = 'eu4random'
   static eu4DocumentsModProjectPath = path.join(Global.eu4DocumentsPath, 'mod', Global.projectName)
 
-  static async init() {
-    const configPath = path.join(process.cwd(), 'config.json')
-    try {
-      await fs.access(configPath)
-      const config = await fs.readFile(configPath, { encoding: 'utf8' })
-      const json = JSON.parse(config)
-      if (json.eu4GamePath) {
-        Global.eu4GamePath = json.eu4GamePath
-      }
-      if (json.eu4DocumentsPath) {
-        Global.eu4DocumentsPath = json.eu4DocumentsPath
-        Global.eu4DocumentsModProjectPath = path.join(
-          Global.eu4DocumentsPath,
-          'mod',
-          Global.projectName
-        )
-      }
-    } catch {}
+  static init(eu4DocumentsPath:string, eu4GamePath:string) {
+    Global.eu4GamePath = eu4GamePath
+    Global.eu4DocumentsPath = eu4DocumentsPath
+    Global.eu4DocumentsModProjectPath = path.join(
+            Global.eu4DocumentsPath,
+            'mod',
+            Global.projectName
+          )
+    // const configPath = path.join(process.cwd(), 'config.json')
+    // try {
+    //   await fs.access(configPath)
+    //   const config = await fs.readFile(configPath, { encoding: 'utf8' })
+    //   const json = JSON.parse(config)
+    //   if (json.eu4GamePath) {
+    //     Global.eu4GamePath = json.eu4GamePath
+    //   }
+    //   if (json.eu4DocumentsPath) {
+    //     Global.eu4DocumentsPath = json.eu4DocumentsPath
+    //     Global.eu4DocumentsModProjectPath = path.join(
+    //       Global.eu4DocumentsPath,
+    //       'mod',
+    //       Global.projectName
+    //     )
+    //   }
+    // } catch {}
   }
   static getDefaultDocuments() {
     return path.join(os.homedir(),'Documents')

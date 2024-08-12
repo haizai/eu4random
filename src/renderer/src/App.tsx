@@ -1,14 +1,21 @@
 import { Button } from 'primereact/button';
-import { ProgressBar } from 'primereact/progressbar';
 import { useEffect, useState } from 'react';
 import { Message } from 'primereact/message';
-import { Toolbar } from 'primereact/toolbar';
 import { InputText } from 'primereact/inputtext';
+import { Card } from 'primereact/card';
 function App(): JSX.Element {
+  const [waitInit, setWaitInit] = useState(false)
   const [progress, setProgress] = useState(0)
-  const [message, setMessage] = useState("message")
+  const [message, setMessage] = useState("")
+  const [isError, setIsError] = useState(false)
   const [documentsPath, setDocumentsPath] = useState("")
   const [gamePath, setGamePath] = useState("")
+  const init = async () => {
+    setWaitInit(true)
+    var isSuccess:boolean = await window.electron.ipcRenderer.invoke('init', documentsPath, gamePath)
+    console.log("apiInit")
+    setWaitInit(false)
+  }
   const selectDocumentsPath = async () => {
     var path = await window.electron.ipcRenderer.invoke('selectDocumentsPath')
     console.log(path)
@@ -30,36 +37,41 @@ function App(): JSX.Element {
     window.electron.ipcRenderer.on("showMessage",(_, value)=>{
       console.log(value)
       setMessage(value)
+      setIsError(false)
+    })
+    window.electron.ipcRenderer.on("showError",(_, value)=>{
+      console.log(value)
+      setMessage(value)
+      setIsError(true)
     })
   }, [])
 
   return (
     <>
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">我的文档</span>
-        <InputText  value={documentsPath}/>
-        <Button icon="pi pi-folder-open" onClick={selectDocumentsPath}/>
+      <div className="container">
+        <div className="centered-block">
+          <h2 style={{textAlign:"center"}}>EU4随机MOD</h2>
+          <Card>
+            <div className="p-inputgroup">
+              <span className="p-inputgroup-addon">我的文档</span>
+              <InputText  value={documentsPath}/>
+              <Button icon="pi pi-folder-open" onClick={selectDocumentsPath} disabled={waitInit}/>
+            </div>
+            <div className="p-inputgroup">
+              <span className="p-inputgroup-addon">EU4.exe所在文件夹</span>
+              <InputText value={gamePath}/>
+              <Button icon="pi pi-folder-open" onClick={selectGamePath} disabled={waitInit}/>
+            </div>
+            <div className="p-inputgroup">
+              <Button onClick={init} disabled={waitInit}>初始化游戏数据</Button>
+            </div>
+          </Card>
+          <Message text={message} severity={isError ? "error" : "secondary"}></Message>
+        </div>
       </div>
-      <div className="p-inputgroup">
-        <span className="p-inputgroup-addon">EU4.exe所在文件夹</span>
-        <InputText value={gamePath}/>
-        <Button icon="pi pi-folder-open" onClick={selectGamePath}/>
-      </div>
-      <Toolbar center={ButtonCenter} />
-      <ProgressBar value={progress}></ProgressBar>
-      <Message severity="secondary" text={message}></Message>
     </>
   )
 }
-function ButtonCenter() :JSX.Element {
-  const init = async () => {
-    await window.electron.ipcRenderer.invoke('init')
-    console.log("apiInit")
-  }
-  return (<>
-    {/* <Button onClick={selectDocumentsPath}>选择我的文档EU4文件夹</Button> */}
-    <Button onClick={init}>init</Button>
-  </>)
-}
+
 
 export default App
